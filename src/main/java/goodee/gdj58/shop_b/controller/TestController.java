@@ -22,7 +22,7 @@ public class TestController {
 		
 		Test test = testService.getTest(1);
 		
-		log.info(TeamColor.PURPLE + test.toString() + " <-- test.toString()");
+		log.info(TeamColor.PURPLE + test.toString() + " <-- test.toString()1");
 		
 		return "test";
 		
