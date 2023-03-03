@@ -3,10 +3,8 @@ package goodee.gdj58.shop_b.vo;
 import lombok.Data;
 
 @Data
-public class Test {
-
+public class SiteHits { // 사이트 조회수
 	private int siteHitsNo;
 	private int siteHits;
 	private String createdate;
-	
 }
