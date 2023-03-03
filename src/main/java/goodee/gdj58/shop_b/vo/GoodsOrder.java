@@ -7,7 +7,6 @@ public class GoodsOrder { // 주문상품 목록
 	private int goodsOrderNo;
 	private int orderSheetNo; // 주문서 번호
 	private int goodsOptionNo; // 상품(옵션)번호
-	private String goodsOptionContent;
 	private int goodsOrderQuantity; // 주문 수량
 	private int goodsOrderPrice; // 주문 가격
 	private int goodsOrderUsePoint; // 사용한 포인트
