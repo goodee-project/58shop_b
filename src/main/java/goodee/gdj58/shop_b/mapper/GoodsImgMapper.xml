@@ -1,3 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="goodee.gdj58.shop_b.mapper.GoodsImgMapper"></mapper>
+<mapper namespace="goodee.gdj58.shop_b.mapper.GoodsImgMapper">
+	<insert id="insertGoodsImg" parameterType="goodee.gdj58.shop_b.vo.GoodsImg">
+		INSERT INTO shopping_goods_img(
+			goods_no
+			, goods_img_save_name
+			, goods_img_origin_name
+			, goods_img_level
+			, goods_img_type
+			, goods_img_size
+			, createdate
+		) VALUES(
+			#{goodsNo}
+			, #{goodsImgSaveName}
+			, #{goodsImgOriginName}
+			, #{goodsImgLevel}
+			, #{goodsImgType}
+			, #{goodsImgSize}
+			, NOW()
+		)
+	</insert>
+</mapper>

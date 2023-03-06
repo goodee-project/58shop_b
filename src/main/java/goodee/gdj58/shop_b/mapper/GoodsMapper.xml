@@ -1,3 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="goodee.gdj58.shop_b.mapper.GoodsMapper"></mapper>
+<mapper namespace="goodee.gdj58.shop_b.mapper.GoodsMapper">
+
+	<!-- insert 후 key 값 받아오기
+		1. useGeneratedKeys="true" 설정
+		2. keyProperty="goodsNo" parameter로 받은 객체에 key값을 입력한다
+		3. keyColumn="goods_no" 테이블 컬럼명
+	 -->
+	<insert id="insertGoods" parameterType="goodee.gdj58.shop_b.vo.Goods" useGeneratedKeys="true"
+        keyProperty="goodsNo" keyColumn="goods_no">
+		INSERT INTO shopping_goods(
+			company_id
+			, type_no
+			, goods_name
+			, goods_price
+			, goods_active
+			, goods_level
+			, updatedate
+			, createdate
+		) VALUES(
+			#{companyId}
+			, #{typeNo}
+			, #{goodsName}
+			, #{goodsPrice}
+			, #{goodsActive}
+			, #{goodsLevel}
+			, NOW()
+			, NOW()
+		)
+	</insert>
+</mapper>
