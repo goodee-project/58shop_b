@@ -1,3 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="goodee.gdj58.shop_b.mapper.CompanyMapper"></mapper>
+<mapper namespace="goodee.gdj58.shop_b.mapper.CompanyMapper">
+
+
+			
+
+
+	<!-- 쇼핑몰 업체 리스트 -->
+	<select id = "selectCompany"
+			resultType = "goodee.gdj58.shop_b.vo.Company">
+		
+		SELECT
+			company_id
+			, company_pw
+			, company_registration_number
+			, company_name
+			, company_ceo
+			, company_phone
+			, company_email
+			, company_address
+			, company_bank
+			, company_account
+			, company_email_marketing
+			, type_content
+			, updatedate
+			, createdate
+		FROM shopping_company
+		ORDER BY createdate DESC
+	
+	</select>
+
+	<!-- 쇼핑몰 업체 추가 -->
+	<insert id = "insertCompany"
+			parameterType = "goodee.gdj58.shop_b.vo.Company">
+			
+		INSERT INTO shopping_company (
+			company_id
+			, company_pw
+			, company_registration_number
+			, company_name
+			, company_ceo
+			, company_phone
+			, company_email
+			, company_address
+			, company_bank
+			, company_account
+			, company_email_marketing
+			, type_content
+		) VALUES (
+			#{companyId}
+			, PASSWORD(#{companyPw})
+			, #{companyRegistrationNumber}
+			, #{companyName}
+			, #{companyCeo}
+			, #{companyPhone}
+			, #{companyEmail}
+			, #{companyAddress}
+			, #{companyBank}
+			, #{companyAccount}
+			, #{companyEmailMarketing}
+			, #{typeContent}
+		)
+	
+	</insert>
+
+
+
+
+
+
+</mapper>
