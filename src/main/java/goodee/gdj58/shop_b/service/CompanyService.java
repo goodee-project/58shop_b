@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import goodee.gdj58.shop_b.mapper.CompanyMapper;
 import goodee.gdj58.shop_b.vo.Company;
-import goodee.gdj58.shop_b.vo.Type;
 
 @Service
 @Transactional

@@ -2,4 +2,68 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="goodee.gdj58.shop_b.mapper.QuestionCustomerCompanyMapper">
+		
+	<!-- 상세보기 -->
+	<select id="selectQuestionCustomerOne" resultType="java.util.Map">
+		SELECT 
+		csq.question_customer_company_no questionCustomerCompanyNo
+			, csq.customer_id customerId
+			, csq.company_id companyId
+			, csq.question_customer_company_category questionCustomerCompanyCategory 
+			, csq.question_customer_company_title questionCustomerCompanyTitle
+			, csq.question_customer_company_content questionCustomerCompanyContent
+			, csq.createdate questionCreatedate
+			, csa.answer_customer_company_content answerCustomerCompanyContent    
+			, csa.createdate answerCreatedate
+		FROM shopping_question_customer_company csq 
+			JOIN shopping_answer_customer_company csa
+			ON csq.question_customer_company_no = csa.question_customer_company_no 
+		WHERE csq.question_customer_company_no = #{questionCustomerCompanyNo}	
+	</select>
+	
+	<!-- 삭제 -->
+	<delete id="deleteQuestionCustomer" parameterType="int">
+		DELETE FROM shopping_question_customer_company WHERE question_customer_company_no = #{questionCustomerCompanyNo}
+	</delete>
+	
+	<!-- 등록 -->	
+	<insert id="insertQuestionCustomer" parameterType="goodee.gdj58.shop_b.vo.QuestionCustomerCompany">
+			INSERT shopping_question_customer_company(
+				customer_id
+				, company_id
+				, question_customer_company_category
+				, question_customer_company_title
+				, question_customer_company_content) 
+				VALUES(
+					#{customerId}
+					,#{companyId}
+					,#{questionCustomerCompanyCategory}
+					,#{questionCustomerCompanyTitle}
+					,#{questionCustomerCompanyContent}) 
+	</insert>
+	
+	<!-- 목록 -->
+	<select id="selectQuestionCustomer" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT 
+			csq.question_customer_company_no questionCustomerCompanyNo
+				, csq.customer_id customerId
+				, csq.company_id companyId
+				, csq.question_customer_company_category questionCustomerCompanyCategory 
+				, csq.question_customer_company_title questionCustomerCompanyTitle			
+				, csq.createdate createdate
+				, csa.answer_customer_company_content answerCustomerCompanyContent 
+		FROM shopping_question_customer_company csq 
+			JOIN shopping_answer_customer_company csa
+			ON csq.question_customer_company_no = csa.question_customer_company_no 
+		WHERE csq.company_id companyId = #{loginCom.companyId}
+		ORDER BY csq.createdate DESC
+		LIMIT #{beginRow}, #{rowPerPage} 	
+	</select>
+	<!-- 리스트 페이징 -->
+	<select id="questionCustomerCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM shopping_question_customer_company
+		WHERE company_id = #{loginCom.companyId}
+	</select>
+	
 </mapper>

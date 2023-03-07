@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import goodee.gdj58.shop_b.vo.Company;
-import goodee.gdj58.shop_b.vo.Type;
 
 @Mapper
 public interface CompanyMapper {
