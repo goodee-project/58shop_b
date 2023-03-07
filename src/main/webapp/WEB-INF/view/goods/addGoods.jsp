@@ -12,7 +12,9 @@
 		<div>
 			카테고리 
 			<select name="typeNo">
-				<option value="1">1</option>
+				<c:forEach var="t" items="${typeList}">
+					<option value="${t.typeNo}">${t.typeContent}</option>
+				</c:forEach>
 			</select>
 		</div>
 		
