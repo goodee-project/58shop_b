@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.GoodsMapper">
-
+	<select id="selectGoodsList" resultType="java.util.Map" parameterType="java.util.Map"> 
+		SELECT 
+			g.goods_no goodsNo
+			, g.company_id companyId
+			, g.type_no typeNo
+			, g.goods_name goodsName
+			, g.goods_price goodsPrice
+			, g.goods_active goodsActive
+			, g.goods_level goodsLevel
+			, gi.goods_img_no goodsImgNo
+			, gi.goods_img_save_name goodsImgSaveName
+		FROM shopping_goods g
+		INNER JOIN shopping_goods_img gi 
+		ON g.goods_no = gi.goods_no
+		WHERE g.company_id = #{companyId}
+		AND gi.goods_img_level = 0
+	</select>
+	
 	<!-- insert 후 key 값 받아오기
 		1. useGeneratedKeys="true" 설정
 		2. keyProperty="goodsNo" parameter로 받은 객체에 key값을 입력한다

@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.StockHistoryMapper">
+	<insert id="insertStockHistory" parameterType="goodee.gdj58.shop_b.vo.StockHistory">
+		INSERT INTO shopping_stock_history(
+			goods_option_no
+			, stock_history_quantity
+			, stock_history_state
+			, stock_history_memo
+			, createdate
+		) VALUES(
+			#{goodsOptionNo}
+			, #{stockHistoryQuantity}
+			, #{stockHistoryState}
+			, #{stockHistoryMemo}
+			, NOW()
+		)
+	</insert>
 </mapper>
