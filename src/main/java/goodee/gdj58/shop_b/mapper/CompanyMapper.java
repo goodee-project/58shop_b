@@ -9,7 +9,8 @@ import goodee.gdj58.shop_b.vo.Company;
 @Mapper
 public interface CompanyMapper {
 
-	
+	// 쇼핑몰 업체 로그인
+	Company loginCompany(Company company);
 
 	// 쇼핑몰 업체 리스트
 	List<Company> selectCompany();

@@ -1,3 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="goodee.gdj58.shop_b.mapper.TotalIdMapper"></mapper>
+<mapper namespace="goodee.gdj58.shop_b.mapper.TotalIdMapper">
+
+	<!-- 임시 확인용 selectTotalIdList -->
+	<select id = "selectTotalIdList"
+			resultType = "goodee.gdj58.shop_b.vo.TotalId">
+		
+		SELECT
+			id
+			, total_id_kind totalIdKind
+			, total_id_Active totalIdActive
+			, total_id_deactive_memo totalIdDeactiveMemo
+			, total_id_deactive_date totalIdDeactiveDate
+			, total_id_reactive_date totalIdReactiveDate
+			, createdate
+		FROM total_id
+		
+	
+	</select>
+		
+
+	<!-- 업체 회원가입 시 TotalId 추가 -->
+	<insert id = "insertTotalId"
+			parameterType = "goodee.gdj58.shop_b.vo.TotalId">
+			
+		INSERT INTO total_id (
+			id
+			, total_id_kind
+			, total_id_active
+		) VALUES (
+			#{id}
+			, '쇼핑'
+			, '비활성화'
+		)
+	
+	</insert>
+
+
+
+</mapper>

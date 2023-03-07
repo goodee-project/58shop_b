@@ -1,3 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="goodee.gdj58.shop_b.mapper.PwHistoryMapper"></mapper>
+<mapper namespace="goodee.gdj58.shop_b.mapper.PwHistoryMapper">
+
+	<!-- 임시 확인용 pwHistory List -->
+	<select id = "selectPwHistoryList"
+			resultType = "goodee.gdj58.shop_b.vo.PwHistory">
+	
+		SELECT
+			pw_history_no pwHistoryNo
+			, id
+			, password
+			, createdate
+		FROM pw_history
+	
+	</select>
+
+	<!-- 업체 회원 가입 시 pw 이력 추가 -->
+	<insert id = "insertPwHistory"
+			parameterType = "goodee.gdj58.shop_b.vo.PwHistory">
+	
+		INSERT INTO pw_history (
+			id
+			, password
+		) VALUES (
+			#{id}
+			, PASSWORD(#{password})
+		)
+	
+	</insert>
+
+
+
+</mapper>

@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.TypeMapper">
 	
+	<!-- 업종 카테고리 리스트(회원 가입 페이지) -->
+	<select id = "selectTypeListForAddCompany"
+			resultType = "java.lang.String">
+		
+		SELECT
+			type_content typeContent
+		FROM shopping_type
+		WHERE parent_no = 0
+			
+	</select>	
+	
+	
 	<select id="selectTypeList" resultType="goodee.gdj58.shop_b.vo.Type" parameterType="Integer">
 		WITH RECURSIVE cts AS (
 		    SELECT 
