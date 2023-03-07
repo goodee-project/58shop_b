@@ -2,4 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="goodee.gdj58.shop_b.mapper.AnswerCustomerCompanyMapper">
+	
+	<!-- 삭제 -->
+	<delete id="deleteAnswerCustomer" parameterType="int">
+		DELETE FROM shopping_answer_customer_company WHERE answer_customer_company_no = #{answerCustomerCompanyNo}
+	</delete>
+	
+	<!-- 등록 -->	
+	<insert id="insertAnswerCustomer" parameterType="goodee.gdj58.shop_b.vo.AnswerCustomerCompany">
+			INSERT shopping_answer_customer_company(
+					question_customer_company_no
+					, answer_customer_company_content)
+				VALUES(#{questionCustomerCompanyNo}
+					,#{answerCustomerCompanyContent})	
+	</insert>
+	
 </mapper>
