@@ -4,7 +4,7 @@
 	namespace="goodee.gdj58.shop_b.mapper.QuestionCustomerCompanyMapper">
 		
 	<!-- 상세보기 -->
-	<select id="selectQuestionCustomerOne" resultType="java.util.Map">
+	<select id="selectQuestionCustomerOne" resultType="java.util.Map" parameterType="int">
 		SELECT 
 		csq.question_customer_company_no questionCustomerCompanyNo
 			, csq.customer_id customerId

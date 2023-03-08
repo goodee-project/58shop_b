@@ -2,4 +2,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="goodee.gdj58.shop_b.mapper.QuestionPlatformCompanyMapper">
+	
+			
+	<!-- 상세보기 -->
+	<select id="selectQuestionPlatformOne" resultType="java.util.Map" parameterType="int">
+		SELECT 
+		cpq.company_id companyId
+			, cpq.question_platform_company_title
+			, cpq.question_platform_company_content
+			, cpq.createdate questionCreatedate
+			, cpa.answer_platform_company_content
+			, cpa.createdate answerCreatedate
+		FROM shopping_question_platform_company cpq 
+			JOIN shopping_answer_platform_company cpa
+			ON cpq.question_platform_company_no = cpa.question_platform_company_no 
+		WHERE cpq.question_platform_company_no = #{questionPlatformCompanyNo}	
+	</select>
+	
+	<!-- 삭제 -->
+	<delete id="deleteQuestionPlatform" parameterType="int">
+		DELETE FROM shopping_question_platform_company
+			WHERE question_platform_company_no = #{questionPlatformCompanyNo}
+	</delete>
+	
+	<!-- 등록 -->	
+	<insert id="insertQuestionPlatform" parameterType="goodee.gdj58.shop_b.vo.QuestionCustomerCompany">
+				INSERT shopping_question_platform_company(
+					company_id
+					, question_platform_company_title
+					, question_platform_company_content
+					) 
+				VALUES(					
+					#{companyId}
+					,#{questionPlatformCompanyTitle}
+					,#{questionPlatformCompanyContent}
+					) 
+	</insert>
+	
+	<!-- 목록 -->
+	<select id="selectQuestionPlatform" resultType="java.util.Map" parameterType="java.util.Map">		
+		SELECT 
+			cpq.company_id companyId
+				, cpq.question_platform_company_title
+				, cpq.question_platform_company_content
+				, cpq.createdate createdate
+				, cpa.answer_platform_company_content
+		FROM shopping_question_platform_company cpq 
+		JOIN shopping_answer_platform_company cpa
+			ON cpq.question_platform_company_no = cpa.question_platform_company_no  
+		ORDER BY cpq.createdate DESC
+			LIMIT #{beginRow}, #{rowPerPage}	
+	</select>
+	<!-- 리스트 페이징 -->
+	<select id="questionPlatformCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM shopping_question_platform_company	
+	</select>
 </mapper>

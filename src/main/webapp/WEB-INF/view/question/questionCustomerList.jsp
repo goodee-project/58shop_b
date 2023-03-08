@@ -29,7 +29,11 @@
                 		<td>
 		               		<c:choose> 
 								<c:when test="${q.answerCustomerCompanyContent == null}">
-									<p>미답변</p>
+									<p>
+									<a href="${pageContext.request.contextPath}/answer/insertAnswerCustomer?questionCustomerCompanyNo=${q.questionCustomerCompanyNo}">
+									미답변
+									</a>
+									</p>
 								</c:when> 
 								<c:otherwise>
 									<p>답변완료</p>
