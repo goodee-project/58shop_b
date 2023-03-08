@@ -27,11 +27,11 @@ public class CompanyController {
 	@Autowired
 	private TypeService typeService;
 	
-	// 쇼핑몰 업체 임시 Test
-	@GetMapping("/index")
+	// 쇼핑몰 업체 home
+	@GetMapping("/company/home")
 	public String test() {
 		
-		return "index";
+		return "home";
 		
 	}
 	
@@ -64,7 +64,7 @@ public class CompanyController {
 			// 로그인 성공 시
 			
 			// 로그인 성공 시 페이지
-			targetUrl = "index";
+			targetUrl = "redirect:/company/home";
 			
 			// 세션에 로그인 정보 저장
 			session.setAttribute("loginCompany", loginCompany);
@@ -101,7 +101,7 @@ public class CompanyController {
 				
 				// 로그인 실패 리스트에 어떤 아이디가 있다면 
 				
-				// 이미 등록된 아이디인지 체크위한 boolean
+				// 이미 로그인 실패 리스트에 등록된 아이디인지 체크위한 boolean
 				boolean check = true;
 				
 				// 리스트의 아이디와 로그인 시도한 아이디 비교

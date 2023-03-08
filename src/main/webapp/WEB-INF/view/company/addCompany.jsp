@@ -12,7 +12,7 @@
     <title></title>
 
     <!-- Favicons-->
-    <link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath }/resources/html/image/x-icon">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/html/img/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" type="image/x-icon" href="${pageContext.request.contextPath }/resources/html/img/apple-touch-icon-57x57-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="${pageContext.request.contextPath }/resources/html/img/apple-touch-icon-72x72-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="${pageContext.request.contextPath }/resources/html/img/apple-touch-icon-114x114-precomposed.png">
@@ -70,7 +70,7 @@
 				<div class="form-group">
 					<label>사업자 등록번호</label>
 					<input class="form-control" type="text" name = "companyRegistrationNumber">
-					<i class="ti-user"></i>
+					<i class="ti-info-alt"></i>
 				</div>
 				
 				<div class="form-group">
@@ -88,7 +88,7 @@
 				<div class="form-group">
 					<label>업체 전화번호</label>
 					<input class="form-control" type="text" name = "companyPhone">
-					<i class="ti-user"></i>
+					<i class="ti-mobile"></i>
 				</div>
 				
 				<div class="form-group">
@@ -100,26 +100,26 @@
 				<div class="form-group">
 					<label>업체 주소</label>
 					<input class="form-control" type="text" name = "companyAddress">
-					<i class="ti-user"></i>
+					<i class="ti-info-alt"></i>
 				</div>
 				
 				<div class="form-group">
 					<label>업체 은행</label>
 					<input class="form-control" type="text" name = "companyBank">
-					<i class="ti-user"></i>
+					<i class="ti-money"></i>
 				</div>
 				
 				<div class="form-group">
 					<label>업체 계좌번호</label>
 					<input class="form-control" type="text" name = "companyAccount">
-					<i class="ti-user"></i>
+					<i class="ti-money"></i>
 				</div>
 				
 				<div class="form-group">
 					<label>이메일 마케팅 수신 여부</label>
 					<div>
-						<i class="ti-user mr-3"></i>
-						<input type = "radio" name = "companyEmailMarketing" value = "동의">동의
+						<i class="ti-gallery mr-3"></i>&emsp;&emsp;&emsp;
+						<input type = "radio" name = "companyEmailMarketing" value = "동의">동의&emsp;
 						<input type = "radio" name = "companyEmailMarketing" value = "미동의">미동의
 					</div>
 				</div>
@@ -127,7 +127,7 @@
 				<div class="form-group">
 					<label>업종 카테고리</label>
 					<div>
-						<i class="ti-user"></i>
+						<i class="ti-target"></i>&emsp;&emsp;&emsp;
 						<select name = typeContent>
 							<c:forEach var="t" items="${typeList }">
 								<option value = "${t }">${t }
