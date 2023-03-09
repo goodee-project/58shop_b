@@ -307,23 +307,7 @@
     <a class="scroll-to-top rounded" href="#page-top">
       <i class="fa fa-angle-up"></i>
     </a>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-	         <h5 class="modal-title" id="exampleModalLabel">답변하기</h5>
-	      </div>
-	     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-          </button>
-	         <div class="form-group">
-	            <textarea cols="40" rows="3" class="form-control"></textarea>
-	         </div>
-	         <button class="btn_1">Reply</button>
-	      </div>	  
-	   </div>
-	   </div>
+   
     <!-- Logout Modal-->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
