@@ -18,10 +18,10 @@
           </a>
           <ul class="sidenav-second-level collapse" id="collapseMylistings1">
             <li>
-              <a href="">상품 목록<span class="badge badge-pill badge-primary">6</span></a>
+              <a href="${pageContext.request.contextPath }/goods/goodsList">상품 목록<span class="badge badge-pill badge-primary">6</span></a>
             </li>
             <li>
-              <a href="">상품 등록</a>
+              <a href="${pageContext.request.contextPath }/goods/addGoods">상품 등록</a>
             </li>
 			<li>
               <a href="">상품 수정</a>

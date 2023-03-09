@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import goodee.gdj58.shop_b.service.GoodsService;
 import goodee.gdj58.shop_b.service.TypeService;
 import goodee.gdj58.shop_b.util.TeamColor;
+import goodee.gdj58.shop_b.vo.Company;
 import goodee.gdj58.shop_b.vo.Goods;
 import goodee.gdj58.shop_b.vo.Type;
 import lombok.extern.slf4j.Slf4j;
@@ -31,13 +32,12 @@ public class GoodsController {
 	@GetMapping("/goods/goodsList")
 	public String selectGoodsList(HttpSession session, Model model) {
 		
-		/* 로그인한 업체 아이디 가져오기 
+		// 로그인한 업체 아이디 가져오기 
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
-		*/
 		
 		// mock id
-		String companyId = "com1";
+		// String companyId = "com1";
 		
 		List<Map<String, Object>> goodsList = goodsService.selectGoodsList(companyId);
 		log.debug(TeamColor.BLUE + goodsList + "<- goodsList, insertGoods");
@@ -66,18 +66,14 @@ public class GoodsController {
 		log.debug(TeamColor.BLUE + ql.length + "<- ql.length, insertGoods");
 		log.debug(TeamColor.BLUE + picList.size() + "<- picList.size(), insertGoods");
 		
-		if(cl.length != ql.length) {
-			return "";
-		}
-		/* 로그인한 업체 아이디 가져오기 
+		// 로그인한 업체 아이디 가져오기 
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
 		goods.setCompanyId(companyId);
-		*/
 		
 		// mock id
-		String companyId = "com1";
-		goods.setCompanyId(companyId);
+		// String companyId = "com1";
+		// goods.setCompanyId(companyId);
 		goods.setGoodsLevel(0); // 기본값 0 
 		
 		// 프로젝트 내에 업로드 파일 경로 구하기
@@ -91,6 +87,6 @@ public class GoodsController {
 			log.debug(TeamColor.BLUE + "<- 상품, 옵션, 이미지 모두 등록 성공, insertGoods");
 		}
 		
-		return "";
+		return "redirect:/goods/goodsList";
 	}
 }
