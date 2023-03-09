@@ -35,12 +35,12 @@ public class QuestionCompanyService {
 	}
 	
 	// 문의사항 목록
-	public List<Map<String, Object>> getQuestionCustomerList(int currentPage, int rowPerPage, Company loginCom) {
+	public List<Map<String, Object>> getQuestionCustomerList(int currentPage, int rowPerPage,String companyId) {
 		int beginRow = (currentPage - 1) * rowPerPage;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("beginRow", beginRow);
 		paramMap.put("rowPerPage", rowPerPage);
-		paramMap.put("loginCom", loginCom);
+		paramMap.put("companyId", companyId);
 		return questionCustomerCompanyMapper.selectQuestionCustomer(paramMap);
 	}	
 	// 페이징count

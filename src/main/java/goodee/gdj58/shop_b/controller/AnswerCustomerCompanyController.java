@@ -25,12 +25,7 @@ public class AnswerCustomerCompanyController {
 		return "redirect:/answer/deleteAnswerCustomer";
 	}
 	
-	// 답변 등록
-	@GetMapping("answer/insertAnswerCustomer")
-	public String insertAnswerCustomer(Model model, int questionCustomerCompanyNo) {
-		model.addAttribute("questionCustomerCompanyNo", questionCustomerCompanyNo);
-		return "answer/insertAnswerCustomer";
-	}
+	// 답변 등록	
 	
 	@PostMapping("answer/insertAnswerCustomer")
 	public String insertAnswerCustomer(AnswerCustomerCompany answerCustomerCompany) {		

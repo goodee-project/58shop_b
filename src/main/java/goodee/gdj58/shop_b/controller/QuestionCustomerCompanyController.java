@@ -63,10 +63,12 @@ public class QuestionCustomerCompanyController {
 		public String getQeustionCustomerList(Model model, HttpSession session
 									, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage
 									, @RequestParam(value = "rowPerPage", defaultValue = "10") int rowPerPage ) {
+		
 			Company loginCom = (Company)session.getAttribute("loginCompany");
 			model.addAttribute("loginCom", loginCom);
+			log.debug(loginCom.getCompanyId()+"<-id");			
 			int count = questionCompanyService.getQuestionCustomerCount(loginCom.getCompanyId());
-			List<Map<String, Object>> list = questionCompanyService.getQuestionCustomerList(currentPage, rowPerPage, loginCom);
+			List<Map<String, Object>> list = questionCompanyService.getQuestionCustomerList(currentPage, rowPerPage, loginCom.getCompanyId());
 			int page = 10; // 페이징 목록 개수
 			int beginPage = ((currentPage - 1)/page) * page + 1; // 시작 페이지
 			int endPage = beginPage + page - 1; // 페이징 목록 끝

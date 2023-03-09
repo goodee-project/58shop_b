@@ -16,7 +16,7 @@
 			, csa.answer_customer_company_content answerCustomerCompanyContent    
 			, csa.createdate answerCreatedate
 		FROM shopping_question_customer_company csq 
-			JOIN shopping_answer_customer_company csa
+			left JOIN shopping_answer_customer_company csa
 			ON csq.question_customer_company_no = csa.question_customer_company_no 
 		WHERE csq.question_customer_company_no = #{questionCustomerCompanyNo}	
 	</select>
@@ -53,9 +53,9 @@
 				, csq.createdate createdate
 				, csa.answer_customer_company_content answerCustomerCompanyContent 
 		FROM shopping_question_customer_company csq 
-			JOIN shopping_answer_customer_company csa
+			left JOIN shopping_answer_customer_company csa
 			ON csq.question_customer_company_no = csa.question_customer_company_no 
-		WHERE csq.company_id companyId = #{loginCom.companyId}
+		WHERE csq.company_id = #{companyId}
 		ORDER BY csq.createdate DESC
 		LIMIT #{beginRow}, #{rowPerPage} 	
 	</select>
