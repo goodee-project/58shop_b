@@ -33,16 +33,16 @@ public class QuestionPlatformService {
 	}
 	
 	// 문의사항 목록
-	public List<Map<String, Object>> getQuestionPlatformList(int currentPage, int rowPerPage, Company loginCom) {
+	public List<Map<String, Object>> getQuestionPlatformList(int currentPage, int rowPerPage, String companyId) {
 		int beginRow = (currentPage - 1) * rowPerPage;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("beginRow", beginRow);
 		paramMap.put("rowPerPage", rowPerPage);
-		paramMap.put("loginCom", loginCom);
+		paramMap.put("companyId", companyId);
 		return questionPlatformCompanyMapper.selectQuestionPlatform(paramMap);
 	}	
 	// 페이징count
-	public int getQuestionPlatformCount() {
-		return questionPlatformCompanyMapper.questionPlatformCount();
+	public int getQuestionPlatformCount(String companyId) {
+		return questionPlatformCompanyMapper.questionPlatformCount(companyId);
 	}
 }

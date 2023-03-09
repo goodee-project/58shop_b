@@ -6,12 +6,13 @@
 			
 	<!-- 상세보기 -->
 	<select id="selectQuestionPlatformOne" resultType="java.util.Map" parameterType="int">
-		SELECT 
-		cpq.company_id companyId
-			, cpq.question_platform_company_title
-			, cpq.question_platform_company_content
+		SELECT
+			cpq.question_platform_company_no questionPlatformCompanyNo 
+			, cpq.company_id companyId
+			, cpq.question_platform_company_title questionPlatformCompanyTitle
+			, cpq.question_platform_company_content questionPlatformCompanyContent
 			, cpq.createdate questionCreatedate
-			, cpa.answer_platform_company_content
+			, cpa.answer_platform_company_content answerPlatformCompanyContent
 			, cpa.createdate answerCreatedate
 		FROM shopping_question_platform_company cpq 
 		left JOIN shopping_answer_platform_company cpa
@@ -42,11 +43,12 @@
 	<!-- 목록 -->
 	<select id="selectQuestionPlatform" resultType="java.util.Map" parameterType="java.util.Map">		
 		SELECT 
-			cpq.company_id companyId
-				, cpq.question_platform_company_title
-				, cpq.question_platform_company_content
+				cpq.question_platform_company_no questionPlatformCompanyNo
+				, cpq.company_id companyId
+				, cpq.question_platform_company_title questionPlatformCompanyTitle
+				, cpq.question_platform_company_content questionPlatformCompanyContent 
 				, cpq.createdate createdate
-				, cpa.answer_platform_company_content
+				, cpa.answer_platform_company_content answerPlatformCompanyContent
 		FROM shopping_question_platform_company cpq 
 		left JOIN shopping_answer_platform_company cpa
 			ON cpq.question_platform_company_no = cpa.question_platform_company_no  

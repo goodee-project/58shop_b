@@ -10,7 +10,7 @@ import goodee.gdj58.shop_b.vo.QuestionPlatformCompany;
 @Mapper
 public interface QuestionPlatformCompanyMapper {
 	//페이징
-	int questionPlatformCount();
+	int questionPlatformCount(String companyId);
 	// 상세보기
 	List<Map<String, Object>> selectQuestionPlatformOne(int questionPlatformCompanyNo);
 	// 삭제
