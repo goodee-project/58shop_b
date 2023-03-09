@@ -265,33 +265,7 @@
                 		<td>
 		               		<c:choose> 
 								<c:when test="${q.answerCustomerCompanyContent == null}">
-								<p class="inline-popups">
-								<a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-								<i class="fa fa-fw fa-reply"></i>답변대기</a></p>
-                             
-                                 
-                                 
-                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                       <div class="modal-content">
-                                          <div class="modal-header">
-                                             <h4 class="modal-title" id="exampleModalLabel">답변하기</h4>
-                                              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-									              <span aria-hidden="true">×</span>
-									          </button>
-                                          </div>
-                                          <div class="modal-body">
-                                             	<form action="${pageContext.request.contextPath}/answer/insertAnswerCustomer" method="post">
-												<input type="hidden" value="${q.questionCustomerCompanyNo}" name="questionCustomerCompanyNo" >
-												 <div class="form-group">
-										            <textarea name="answerCustomerCompanyContent"  cols="40" rows="3" class="form-control"></textarea>
-										         </div>												
-												<button type="submit">등록</button>
-												</form>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>									
+									<p>미답변</p>							
 								</c:when> 
 								<c:otherwise>
 									<p>답변완료</p>

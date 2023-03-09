@@ -14,7 +14,7 @@
 			, cpa.answer_platform_company_content
 			, cpa.createdate answerCreatedate
 		FROM shopping_question_platform_company cpq 
-			JOIN shopping_answer_platform_company cpa
+		left JOIN shopping_answer_platform_company cpa
 			ON cpq.question_platform_company_no = cpa.question_platform_company_no 
 		WHERE cpq.question_platform_company_no = #{questionPlatformCompanyNo}	
 	</select>
@@ -48,7 +48,7 @@
 				, cpq.createdate createdate
 				, cpa.answer_platform_company_content
 		FROM shopping_question_platform_company cpq 
-		JOIN shopping_answer_platform_company cpa
+		left JOIN shopping_answer_platform_company cpa
 			ON cpq.question_platform_company_no = cpa.question_platform_company_no  
 		ORDER BY cpq.createdate DESC
 			LIMIT #{beginRow}, #{rowPerPage}	
