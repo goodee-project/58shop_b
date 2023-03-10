@@ -40,7 +40,7 @@ public class CompanyController {
 	public String logout(HttpSession session) {
 		
 		session.invalidate();
-		return "redirect:/login";
+		return "redirect:http://3.34.241.220/58platform/integrationPage";
 		
 	}
 	
@@ -48,14 +48,14 @@ public class CompanyController {
 	@GetMapping("/login")
 	public String loginCompany() {
 		
-		return "login";
+		return "redirect:http://3.34.241.220/58platform/integrationPage";
 		
 	}
 	
 	@PostMapping("/login")
 	public String loginCompany(HttpSession session, Company paramCompany) {
 		
-		String targetUrl = "login";		// 로그인 실패 시 페이지
+		String targetUrl = "redirect:http://3.34.241.220/58platform/integrationPage";		// 로그인 실패 시 페이지
 		
 		Company loginCompany = companyService.loginCompany(paramCompany);
 		
