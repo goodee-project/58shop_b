@@ -30,6 +30,26 @@ public class CompanyService {
 	@Autowired
 	private TotalIdMapper totalIdMapper;
 	
+	
+	// 쇼핑몰 업체 아이디 중복 확인
+	// 사용 가능한 ID : YES
+	// 사용 불가능한 ID : NO
+	public String selectTotalId(String companyId) {
+		
+		String checkId = companyMapper.selectTotalId(companyId);
+		
+		String resultStr = "NO";
+		
+		if(checkId == null) {
+			
+			resultStr = "YES";
+			
+		}
+		
+		return resultStr;
+		
+	}
+	
 	// 쇼핑몰 업체 로그인
 	public Company loginCompany(Company company) {
 		
