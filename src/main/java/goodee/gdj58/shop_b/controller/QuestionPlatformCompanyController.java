@@ -52,7 +52,7 @@ public class QuestionPlatformCompanyController {
 		if(row == 1) {
 			log.debug("\u001B[33m"+"등록성공");
 		}
-		return "redirect:/question/insertQuestionPlatform";
+		return "redirect:/question/questionPlatformList";
 	}
 	
 	

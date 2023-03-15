@@ -49,8 +49,54 @@
 			<div class="box_general padding_bottom">
 				<div class="header_box version_2">
 					<h2><i class="fa fa-question"></i>플랫폼 문의</h2>
-					<div style="align-content: right">문의하기</div>
 				</div>
+				
+			
+							
+				<div class="row">
+				
+					<!-- 문의하기 시작 -->				
+										
+							
+								<p class="inline-popups">
+									<a class="nav-link btn_1 " data-toggle="modal" data-target="#exampleModal1">
+										<i class="fa fa-fw fa-reply"></i> 문의하기
+									</a>
+								</p>
+								
+								    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			                         <div class="modal-dialog" role="document">
+			                            <div class="modal-content">
+			                               <div class="modal-header">
+			                                  <h4 class="modal-title" id="exampleModalLabel">문의하기</h4>
+			                                   <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+			 									<span aria-hidden="true">×</span>
+			        							</button>
+			                               </div>
+			                                <form action="${pageContext.request.contextPath}/question/insertQuestionPlatform" method="post">
+			                               		<div class="modal-body">
+													<input type="text" placeholder="제목을 입력하세요" name="questionPlatformCompanyTitle" >
+														<div class="form-group">
+												            <textarea name="questionPlatformCompanyContent" placeholder="내용을 입력하세요" cols="40" rows="3" class="form-control"></textarea>
+												        </div>												
+												</div>
+												
+										        <div class="modal-footer">
+													<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
+													<button class = "btn btn-primary" type="submit">등록</button>
+												</div>
+												
+											</form>
+			                             </div>
+			                           </div>
+			                         </div>					
+						 
+					
+					<!-- 문의하기 끝 -->				
+					
+				</div>
+			
+			<!-- 고객 문의 답변 끝 -->
 				
 				<div class="row">
 				
