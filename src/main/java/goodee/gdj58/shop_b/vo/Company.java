@@ -15,7 +15,7 @@ public class Company {
 	private String companyBank; // 은행
 	private String companyAccount; // 계좌
 	private String companyEmailMarketing; // 이메일 마케팅 수신여부
-	private String typeContent; // 업종 카테고리
+	private int typeNo; // 업종 카테고리 DB수정으로 No변경
 	private String updatedate;
 	private String createdate;
 }

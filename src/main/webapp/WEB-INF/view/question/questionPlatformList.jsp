@@ -49,6 +49,7 @@
 			<div class="box_general padding_bottom">
 				<div class="header_box version_2">
 					<h2><i class="fa fa-question"></i>플랫폼 문의</h2>
+					<div style="align-content: right">문의하기</div>
 				</div>
 				
 				<div class="row">
