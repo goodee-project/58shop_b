@@ -34,6 +34,9 @@
 	<!-- CDN 주소 추가 방식 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>	
 	
+	<!-- 카카오 주소 api -->
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	
 	<style>
 		.errorMsg {
 			color : red;
@@ -331,12 +334,129 @@
 			});
 			
 			
+			// 업체 전화번호 유효성 검사
+			$('#companyPhone').blur(function() {
+				
+				// - 삭제
+				let companyPhone = $('#companyPhone').val().replace(/-/g, '');
+				
+				console.log(companyPhone.length)
+				
+				const regExCompanyPhone = /^\d{9,11}$/;
+				
+				if(regExCompanyPhone.test(companyPhone)) {
+					
+					// 사용 가능한 업체 전화번호라면
+					$('#companyPhoneMsg').text('');
+					$('#companyPhoneCheck').text('');
+					$('#companyPhoneCheck').prepend('<span class="ti-check"></span>');
+					$('#companyEmail').focus();					
+					
+					// - 삭제한 값을 다시 입력
+					$('#companyPhone').val(companyPhone);
+					
+					phoneCheck = true;					
+					
+				} else {
+					
+					// 사용 불가능한 업체 전화번호라면
+					$('#companyPhone').val('');
+					
+					$('#companyPhoneMsg').text('');
+					$('#companyPhoneCheck').text('');
+					$('#companyPhoneMsg').text('올바른 전화번호를 입력하세요.');
+					
+					phoneCheck = false;	
+					
+				}
+				
+			});
+			
+			
+			// 업체 이메일 유효성 검사
+			$('#companyEmail').blur(function() {
+				
+				let companyEmail = $('#companyEmail').val();
+				
+				const regExCompanyEmail = /[\w\-\.]+\@[\w\-\.]+/;
+				
+				if(regExCompanyEmail.test(companyEmail)) {
+					
+					// 사용 가능한 업체 이메일이라면
+					$('#companyEmailMsg').text('');
+					$('#companyEmailCheck').text('');
+					$('#companyEmailCheck').prepend('<span class="ti-check"></span>');
+					$('#companyBank').focus();						
+					
+					emailCheck = true;
+					
+				} else {
+					
+					// 사용 불가능한 업체 이메일이라면
+					$('#companyEmail').val('');
+					
+					$('#companyEmailMsg').text('');
+					$('#companyEmailCheck').text('');
+					$('#companyEmailMsg').text('올바른 이메일 주소를 입력하세요.');
+					
+					emailCheck = false;
+					
+				}
+				
+				
+			});
+			
+			// 업체 주소 유효성 검사
+			/*
+			let roadAddress = $('#roadAddress').val();
+			
+			if(roadAddress != '') {
+				
+				
+				
+			} else {
+				
+				
+				
+			}
 			
 			
 			
 			
+			$('#detailAddress').blur(function() {
+				
+				let roadAddress = $('#roadAddress').val();
+				let detailAddress = $('#detailAddress').val();
+				
+				$('#companyAddress').val(roadAddress + ' ' + detailAddress);
+				
+				console.log($('#companyAddress').val());
+				
+			})
 			
 			
+			
+			$('#roadAddress').addEventListener('change', function() {
+				
+				let roadAddress = $('#roadAddress').val();
+				let detailAddress = $('#detailAddress').val();
+				
+				$('#companyAddress').val(roadAddress + ' ' + detailAddress);
+				
+				console.log($('#companyAddress').val());
+				
+			});
+			
+			$('#roadAddress').change(function() {
+				
+				let roadAddress = $('#roadAddress').val();
+				let detailAddress = $('#detailAddress').val();
+				
+				$('#companyAddress').val(roadAddress + ' ' + detailAddress);
+				
+				console.log($('#companyAddress').val());
+			});
+			*/
 			
 			
 			
@@ -388,6 +508,29 @@
 		});
 	
 	</script>	
+	
+	
+	<script>
+	
+		// 업체 주소 카카오 주소 api
+	    function kakaoAddressApi() {
+	        new daum.Postcode({
+	            oncomplete: function(data) {
+	
+	                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+	                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+	                var roadAddr = data.roadAddress; // 도로명 주소 변수
+	
+	                // 주소 정보를 해당 필드에 넣는다.
+	                $('#roadAddress').val(roadAddr);
+	                $('#jibunAddress').val(data.jibunAddress);
+	                
+	            }
+	        }).open();
+	    }
+		
+	
+	</script>
 	
 	
 </head>
@@ -456,22 +599,37 @@
 				</div>
 				
 				<div class="form-group">
-					<label>업체 전화번호</label>
-					<input class="form-control" type="text" name = "companyPhone">
+					<label>업체 전화번호</label><span id = "companyPhoneCheck" class = "check"></span>
+					<input class="form-control" type="text" name = "companyPhone" id = "companyPhone">
 					<i class="ti-mobile"></i>
+					<span id = "companyPhoneMsg" class = "errorMsg"></span>
 				</div>
 				
 				<div class="form-group">
-					<label>업체 이메일</label>
-					<input class="form-control" type="email" name = "companyEmail">
+					<label>업체 이메일</label><span id = "companyEmailCheck" class = "check"></span>
+					<input class="form-control" type="email" name = "companyEmail" id = "companyEmail">
 					<i class="icon_mail_alt"></i>
+					<span id = "companyEmailMsg" class = "errorMsg"></span>
 				</div>
 				
 				<div class="form-group">
 					<label>업체 주소</label>
-					<input class="form-control" type="text" name = "companyAddress">
+					
+					<input type="text" id="roadAddress" class = "form-control" placeholder="도로명주소" onchange = "mergeAddress();"readonly = "readonly">
+					<input type="text" id="jibunAddress" class = "form-control" placeholder="지번주소" readonly = "readonly">
+					<input type="text" id="detailAddress" class = "form-control" placeholder="상세주소">
+					<input class="form-control" type="hidden" name = "companyAddress" id = "companyAddress">
 					<i class="ti-info-alt"></i>
+					<div style = "display: flex; flex-flow : row nowrap; justify-content : center;">
+						<button type="button" onclick="kakaoAddressApi();" class = "btn_1 rounded add_top_10 ">주소 검색</button><br>
+					</div>
 				</div>
+				
+				<div>
+
+				
+				</div>
+				
 				
 				<div class="form-group">
 					<label>업체 은행</label>
