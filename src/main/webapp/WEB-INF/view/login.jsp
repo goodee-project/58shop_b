@@ -12,7 +12,7 @@
     <title></title>
 
     <!-- Favicons-->
-    <link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath }/resources/html/image/x-icon">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/html/img/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" type="image/x-icon" href="${pageContext.request.contextPath }/resources/html/img/apple-touch-icon-57x57-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="${pageContext.request.contextPath }/resources/html/img/apple-touch-icon-72x72-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="${pageContext.request.contextPath }/resources/html/img/apple-touch-icon-114x114-precomposed.png">
@@ -60,16 +60,10 @@
 					<i class="icon_lock_alt"></i>
 				</div>
 				<div class="clearfix add_bottom_30">
-					<div class="checkboxes float-start">
-						<label class="container_check">Remember me
-						  <input type="checkbox">
-						  <span class="checkmark"></span>
-						</label>
-					</div>
 					<div class="float-end mt-1"><a id="forgot" href="javascript:void(0);">Forgot Password?</a></div>
 				</div>
 				<button type = "submit" class="btn_1 rounded full-width">Login</button>
-				<div class="text-center add_top_10">New to Panagea? <strong><a href="${pageContext.request.contextPath }/addCompany">Sign up!</a></strong></div>
+				<div class="text-center add_top_10">New to Panagea? <strong><a href="${pageContext.request.contextPath }/insertCompany">Sign up!</a></strong></div>
 			</form>
 			<div class="copy">© Panagea</div>
 		</aside>

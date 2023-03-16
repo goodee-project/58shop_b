@@ -55,6 +55,7 @@
 			// 아이디 중복 체크
 			let idCheck = false;		// 아이디
 			let pwCheck = false;		// 비밀번호
+			let pw2Check = false;		// 비밀번호
 			let rnCheck = false;		// 사업자 등록번호
 			let cnCheck = false;		// 업체 이름
 			let ceoCheck = false;		// 대표자 이름
@@ -95,7 +96,6 @@
 									
 								} else {
 									// 사용중인 ID
-									$('#companyId').val('');
 									
 									$('#idMsg').text('');
 									$('#idCheck').text('');									
@@ -386,7 +386,7 @@
 					$('#companyEmailMsg').text('');
 					$('#companyEmailCheck').text('');
 					$('#companyEmailCheck').prepend('<span class="ti-check"></span>');
-					$('#companyBank').focus();						
+					$('#detailAddress').focus();						
 					
 					emailCheck = true;
 					
@@ -406,40 +406,31 @@
 				
 			});
 			
-			// 업체 주소 유효성 검사
-			/*
-			let roadAddress = $('#roadAddress').val();
 			
-			if(roadAddress != '') {
-				
-				
-				
-			} else {
-				
-				
-				
-			}
-			
-			
-			
-			
+			// 업체 주소(상세주소 블러처리) 유효성 검사
 			$('#detailAddress').blur(function() {
 				
 				let roadAddress = $('#roadAddress').val();
 				let detailAddress = $('#detailAddress').val();
 				
-				$('#companyAddress').val(roadAddress + ' ' + detailAddress);
-				
-				console.log($('#companyAddress').val());
-				
-			})
-			
-			
-			
-			$('#roadAddress').addEventListener('change', function() {
-				
-				let roadAddress = $('#roadAddress').val();
-				let detailAddress = $('#detailAddress').val();
+				if(roadAddress != '') {
+
+					// 도로명주소가 공백이 아니라면
+					$('#companyAddressMsg').text('');
+					$('#companyAddressCheck').text('');
+					$('#companyAddressCheck').prepend('<span class="ti-check"></span>');
+					$('#companyBank').focus();
+					
+				} else {
+					
+					// 도로명 주소가 공백이라면
+					
+					$('#companyAddressMsg').text('');
+					$('#companyAddressCheck').text('');
+					$('#companyAddressMsg').text('올바른 주소를 검색해서 입력하세요.');
+					
+					
+				}
 				
 				$('#companyAddress').val(roadAddress + ' ' + detailAddress);
 				
@@ -447,60 +438,118 @@
 				
 			});
 			
-			$('#roadAddress').change(function() {
+			
+			// 업체 은행 유효성 검사
+			$('#companyBank').blur(function() {
 				
-				let roadAddress = $('#roadAddress').val();
-				let detailAddress = $('#detailAddress').val();
+				let companyBank = $('#companyBank').val();
 				
-				$('#companyAddress').val(roadAddress + ' ' + detailAddress);
+				const regExCompanyBank = /^[ㄱ-ㅎ가-힣a-zA-Z]{1,15}$/;
 				
-				console.log($('#companyAddress').val());
+				if(regExCompanyBank.test(companyBank)) {
+					
+					// 사용 가능한 업체 은행명이라면
+					$('#companyBankMsg').text('');
+					$('#companyBankCheck').text('');
+					$('#companyBankCheck').prepend('<span class="ti-check"></span>');
+					$('#companyAccount').focus();
+					
+					bankCheck = true;
+					
+				} else {
+					
+					// 사용 불가능한 업체 은행명이라면
+					
+					$('#companyBank').val('');
+					
+					$('#companyBankMsg').text('');
+					$('#companyBankCheck').text('');
+					$('#companyBankMsg').text('올바른 은행 이름을 입력하세요.');
+					
+					bankCheck = false;
+					
+				}
+				
 			});
-			*/
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			// 업체 계좌 유효성 검사
+			$('#companyAccount').blur(function() {
+				
+				let companyAccount = $('#companyAccount').val().replace(/-/g, '');
+				
+				const regExCompanyAccount = /^[0-9\-]{1,20}$/;
+				
+				if(regExCompanyAccount.test(companyAccount)) {
+					
+					// 사용 가능한 계좌 번호라면
+					$('#companyAccountMsg').text('');
+					$('#companyAccountCheck').text('');
+					$('#companyAccountCheck').prepend('<span class="ti-check"></span>');
+					
+					$('#companyAccount').val(companyAccount);
+					
+					accountCheck = true;
+					
+				} else {
+					
+					// 사용 불가능한 계좌 번호라면
+					$('#companyAccount').val('');
+					
+					$('#companyAccountMsg').text('');
+					$('#companyAccountCheck').text('');
+					$('#companyAccountMsg').text('올바른 은행 계좌 번호를 입력하세요.');
+					
+					accountCheck = false;
+					
+				}
+				
+			});
 			
 			
 			// 회원 가입 폼 전송
 			$('#addBtn').click(function() {
 				
+				// 도로명 주소 input이 공백이 아닐 때
+				// companyAddress가 공백이 아닐때
+				
+				let roadAddress = $('#roadAddress').val();
+				let companyAddress = $('#companyAddress').val();
+				
+				if(roadAddress == '' || companyAddress == '') {
 
-				
-				
-				
-				
-				
-				
-				
-				
-				
+					// 도로명주소나 업체 주소가 공백이라면
+					$('#companyAddressMsg').text('');
+					$('#companyAddressCheck').text('');
+					$('#companyAddressMsg').text('올바른 주소를 검색해서 입력하세요.');
+					$('#detailAddress').focus();
+
+					addressCheck = false;
+					
+				} else {
+					
+					// 도로명 주소가 공백이 아니라면
+					
+					$('#companyAddressMsg').text('');
+					$('#companyAddressCheck').text('');
+					$('#companyAddressCheck').prepend('<span class="ti-check"></span>');
+					
+					addressCheck = true;
+					
+					console.log(addressCheck + 'ccc');
+					
+				}				
 				
 				// 폼 액션 전송
 				
-				if(check == true) {
+				if(idCheck && pwCheck && pw2Check && rnCheck && cnCheck && ceoCheck && phoneCheck
+					&& addressCheck && emailCheck && bankCheck && accountCheck) {
 					
 					$('#addForm').submit();
 					
 				} else {
 					
-					alert('아이디 중복을 확인하세요.')
+					alert('모든 정보를 올바르게 입력하세요.')
 				}
 				
 			});
@@ -520,10 +569,16 @@
 	                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
 	                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
 	                var roadAddr = data.roadAddress; // 도로명 주소 변수
-	
+	                
 	                // 주소 정보를 해당 필드에 넣는다.
 	                $('#roadAddress').val(roadAddr);
 	                $('#jibunAddress').val(data.jibunAddress);
+	                
+					// 도로명 주소 + 상세주소 합치기
+					$('#companyAddress').val($('#roadAddress').val() + ' ' + $('#detailAddress').val());
+					
+					console.log($('#companyAddress').val());
+	                
 	                
 	            }
 	        }).open();
@@ -553,7 +608,7 @@
 					<img src="${pageContext.request.contextPath }/resources/html/img/logo_sticky.svg" width="155" height="36" alt="" class="logo_sticky">
 				</a>
 			</figure>
-			<form autocomplete="off" id = "addForm" method = "post" action = "${pageContext.request.contextPath }/addCompany">
+			<form autocomplete="off" id = "addForm" method = "post" action = "${pageContext.request.contextPath }/insertCompany">
 				<div class="col form-group">
 					<label>아이디</label><span id = "idCheck" class = "check"></span>
 					<input class="form-control" type="text" name = "companyId" id = "companyId">
@@ -613,13 +668,14 @@
 				</div>
 				
 				<div class="form-group">
-					<label>업체 주소</label>
+					<label>업체 주소</label><span id = "companyAddressCheck" class = "check"></span>
 					
 					<input type="text" id="roadAddress" class = "form-control" placeholder="도로명주소" onchange = "mergeAddress();"readonly = "readonly">
 					<input type="text" id="jibunAddress" class = "form-control" placeholder="지번주소" readonly = "readonly">
 					<input type="text" id="detailAddress" class = "form-control" placeholder="상세주소">
 					<input class="form-control" type="hidden" name = "companyAddress" id = "companyAddress">
 					<i class="ti-info-alt"></i>
+					<span id = "companyAddressMsg" class = "errorMsg"></span>
 					<div style = "display: flex; flex-flow : row nowrap; justify-content : center;">
 						<button type="button" onclick="kakaoAddressApi();" class = "btn_1 rounded add_top_10 ">주소 검색</button><br>
 					</div>
@@ -632,23 +688,25 @@
 				
 				
 				<div class="form-group">
-					<label>업체 은행</label>
-					<input class="form-control" type="text" name = "companyBank">
+					<label>업체 은행</label><span id = "companyBankCheck" class = "check"></span>
+					<input class="form-control" type="text" name = "companyBank" id = "companyBank">
 					<i class="ti-money"></i>
+					<span id = "companyBankMsg" class = "errorMsg"></span>
 				</div>
 				
 				<div class="form-group">
-					<label>업체 계좌번호</label>
-					<input class="form-control" type="text" name = "companyAccount">
+					<label>업체 계좌번호</label><span id = "companyAccountCheck" class = "check"></span>
+					<input class="form-control" type="text" name = "companyAccount" id = "companyAccount">
 					<i class="ti-money"></i>
+					<span id = "companyAccountMsg" class = "errorMsg"></span>
 				</div>
 				
 				<div class="form-group">
 					<label>이메일 마케팅 수신 여부</label>
 					<div>
 						<i class="ti-gallery mr-3"></i>&emsp;&emsp;&emsp;
-						<input type = "radio" name = "companyEmailMarketing" value = "동의" checked = "checked">동의&emsp;
-						<input type = "radio" name = "companyEmailMarketing" value = "미동의">미동의
+						<input type = "radio" name = "companyEmailMarketing" value = "동의" checked = "checked"> 동의&emsp;
+						<input type = "radio" name = "companyEmailMarketing" value = "미동의"> 미동의
 					</div>
 				</div>
 				
@@ -656,9 +714,9 @@
 					<label>업종 카테고리</label>
 					<div>
 						<i class="ti-target"></i>&emsp;&emsp;&emsp;
-						<select name = typeContent>
+						<select name = "typeNo" class = "select">
 							<c:forEach var="t" items="${typeList }">
-								<option value = "${t }">${t }
+								<option value = "${t.typeNo }">${t.typeContent }
 							</c:forEach>
 						</select>					
 					</div>

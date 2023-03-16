@@ -1,6 +1,7 @@
 package goodee.gdj58.shop_b.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,12 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import goodee.gdj58.shop_b.service.CompanyService;
 import goodee.gdj58.shop_b.service.TypeService;
 import goodee.gdj58.shop_b.util.TeamColor;
 import goodee.gdj58.shop_b.vo.Company;
 import goodee.gdj58.shop_b.vo.LoginFail;
+import goodee.gdj58.shop_b.vo.Type;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -27,15 +30,93 @@ public class CompanyController {
 	@Autowired
 	private TypeService typeService;
 	
-	// 쇼핑몰 업체 home
+	// 쇼핑몰 업체 비밀번호 변경 Get
+	@GetMapping("/company/updateCompanyPw")
+	public String updateCompanyPw() {
+		
+		return "company/updateCompanyPw";
+		
+	}
+	
+	// 쇼핑몰 업체 비밀번호 변경 Post
+	@PostMapping("/company/updateCompanyPw")
+	public String updateCompanyPw(HttpSession session, 
+									@RequestParam("password") String password) {
+		
+		// 세션에서 아이디 가져오기
+		String companyId = ((Company) session.getAttribute("loginCompany")).getCompanyId();
+		
+		Company company = new Company();
+		company.setCompanyId(companyId);
+		company.setCompanyPw(password);		// 변경할 비밀번호
+		
+		companyService.updateCompanyPw(company);
+		
+		return "redirect:/login";
+		
+	}
+	
+	// 쇼핑몰 업체 정보 수정 Get
+	@GetMapping("/company/updateCompany")
+	public String updateCompany(HttpSession session, Model model) {
+		
+		// 세션에서 아이디 가져오기
+		String companyId = ((Company) session.getAttribute("loginCompany")).getCompanyId();
+		
+		// 현재 등록된 정보 보여주기 위해서
+		HashMap<String, Object> company = (HashMap<String, Object>) companyService.selectCompany(companyId);
+		
+		model.addAttribute("company", company);
+		
+		// typeList
+		ArrayList<Type> typeList = (ArrayList<Type>) typeService.selectTypeListForAddCompany();
+		
+		model.addAttribute("typeList", typeList);
+		
+		return "company/updateCompany";
+		
+	}
+	
+	// 쇼핑몰 업체 정보 수정 Post
+	@PostMapping("/company/updateCompany")
+	public String updateCompany(Company company) {
+		
+		int resultRow = companyService.updateCompany(company);
+		
+		log.info(TeamColor.CYAN + resultRow + " <-- resultRow");
+		
+		return "redirect:/company/companyOne";		
+		
+	}
+	
+	
+	
+	
+	// 쇼핑몰 업체 정보 조회 Get
+	@GetMapping("/company/companyOne")
+	public String companyList(HttpSession session, Model model) {
+		
+		// 세션에서 아이디 가져오기
+		String companyId = ((Company) session.getAttribute("loginCompany")).getCompanyId();
+		
+		// 현재 등록된 정보 보여주기
+		HashMap<String, Object> company = (HashMap<String, Object>) companyService.selectCompany(companyId);
+		
+		model.addAttribute("company", company);
+		
+		return "company/companyOne";
+		
+	}
+	
+	// 쇼핑몰 업체 home Get
 	@GetMapping("/company/home")
-	public String test() {
+	public String home() {
 		
 		return "home";
 		
 	}
 	
-	// 쇼핑몰 업체 로그아웃
+	// 쇼핑몰 업체 로그아웃 Get
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		
@@ -44,7 +125,7 @@ public class CompanyController {
 		
 	}
 	
-	// 쇼핑몰 업체 로그인
+	// 쇼핑몰 업체 로그인 Get
 	@GetMapping("/login")
 	public String loginCompany() {
 		
@@ -52,6 +133,7 @@ public class CompanyController {
 		
 	}
 	
+	// 쇼핑몰 업체 로그인 Post
 	@PostMapping("/login")
 	public String loginCompany(HttpSession session, Company paramCompany) {
 		
@@ -146,23 +228,20 @@ public class CompanyController {
 		
 	}
 	
-	// 쇼핑몰 업체 추가(회원 가입)
-	@GetMapping("/addCompany")
+	// 쇼핑몰 업체 추가(회원 가입) Get
+	@GetMapping("/insertCompany")
 	public String addCompany(Model model) {
 		
-		ArrayList typeList = (ArrayList) typeService.selectTypeListForAddCompany();
+		ArrayList<Type> typeList = (ArrayList<Type>) typeService.selectTypeListForAddCompany();
 		
 		model.addAttribute("typeList", typeList);
 		
-		ArrayList<Company> list = (ArrayList) companyService.selectComapnyList();
-		
-		log.info(TeamColor.CYAN + list.toString() + " <-- list.toString()");
-		
-		return "company/addCompany";
+		return "company/insertCompany";
 		
 	}
 	
-	@PostMapping("/addCompany")
+	// 쇼핑몰 업체 추가(회원 가입) Post
+	@PostMapping("/insertCompany")
 	public String addCompany(Company company) {
 		
 		int resultRow = companyService.insertCompany(company);

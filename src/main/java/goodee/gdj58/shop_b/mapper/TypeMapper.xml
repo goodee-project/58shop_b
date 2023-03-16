@@ -4,10 +4,11 @@
 	
 	<!-- 업종 카테고리 리스트(회원 가입 페이지) -->
 	<select id = "selectTypeListForAddCompany"
-			resultType = "java.lang.String">
+			resultType = "goodee.gdj58.shop_b.vo.Type">
 		
 		SELECT
-			type_content typeContent
+			type_no typeNo
+			, type_content typeContent
 		FROM shopping_type
 		WHERE parent_no = 0
 			

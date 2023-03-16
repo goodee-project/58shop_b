@@ -9,6 +9,9 @@ import goodee.gdj58.shop_b.vo.TotalId;
 @Mapper
 public interface TotalIdMapper {
 
+	// 쇼핑몰 업체 아이디 중복 확인
+	public String selectTotalId(String companyId);	
+	
 	// 임시 확인용 selectTotalIdList
 	List<TotalId> selectTotalIdList();
 	

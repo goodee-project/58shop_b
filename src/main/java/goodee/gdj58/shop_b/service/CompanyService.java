@@ -1,7 +1,8 @@
 package goodee.gdj58.shop_b.service;
 
-import java.util.ArrayList;	
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,17 +31,62 @@ public class CompanyService {
 	@Autowired
 	private TotalIdMapper totalIdMapper;
 	
-	
-	// 쇼핑몰 업체 아이디 중복 확인
-	// 사용 가능한 ID : YES
-	// 사용 불가능한 ID : NO
-	public String selectTotalId(String companyId) {
+	// 쇼핑몰 업체 비밀번호 변경
+	// 1. 현재 비밀번호와 일치하는지(ajax)
+	// 2. pw_history에 이력이 있는지(ajax)
+	// 3. pw 이력 추가 시 3개 까지만 보관
+	public int updateCompanyPw(Company company) {
 		
-		String checkId = companyMapper.selectTotalId(companyId);
+		int resultRow = 0;
+		
+		PwHistory pwHistory = new PwHistory();
+		pwHistory.setId(company.getCompanyId());
+		pwHistory.setPassword(company.getCompanyPw());
+		
+		int pwHistoryCount = pwHistoryMapper.selectPwHistoryCount(company.getCompanyId());
+		
+		if(pwHistoryCount >= 3) {
+			
+			// 이력이 3개 이상일때 가장 오래된 이력 삭제
+			pwHistoryMapper.deletePwHistory(company.getCompanyId());
+			
+			
+			// pw_history 이력 추가
+			pwHistoryMapper.insertPwHistory(pwHistory);
+			
+			// 비밀번호 변경
+			resultRow = companyMapper.updateCompanyPw(company);
+			
+			
+			
+		} else {
+			
+			// pw_history 이력이 2개 이하일 때
+			
+			// pw_history 이력 추가
+			pwHistoryMapper.insertPwHistory(pwHistory);
+			
+			// 비밀번호 변경
+			resultRow = companyMapper.updateCompanyPw(company);
+			
+		}
+		
+		return resultRow;
+	}
+	
+	
+	
+	// 비밀번호 변경 시 현재 비밀번호 일치하는지 확인
+	// 현재 비밀번호 일치 : YES
+	// 현재 비밀번호 불일치 : NO
+	public String selectCompanyPwCheck(Company company) {
+		
+		// 로그인 메서드 이용해서 비밀번호 체크
+		String checkPw = companyMapper.selectPwCheck(company);
 		
 		String resultStr = "NO";
 		
-		if(checkId == null) {
+		if(checkPw != null) {
 			
 			resultStr = "YES";
 			
@@ -48,7 +94,23 @@ public class CompanyService {
 		
 		return resultStr;
 		
+	}	
+	// 쇼핑몰 업체 정보 수정
+	public int updateCompany(Company company) {
+		
+		return companyMapper.updateCompany(company);
+		
 	}
+	
+	// 쇼핑몰 업체 정보 조회
+	public Map<String, Object> selectCompany(String companyId) {
+		
+		Map<String, Object> company = companyMapper.selectCompany(companyId);
+		
+		return company;
+		
+	}
+	
 	
 	// 쇼핑몰 업체 로그인
 	public Company loginCompany(Company company) {
@@ -60,7 +122,7 @@ public class CompanyService {
 	// 쇼핑몰 업체 리스트
 	public List<Company> selectComapnyList() {
 		
-		return companyMapper.selectCompany();
+		return companyMapper.selectCompanyList();
 		
 	}
 	

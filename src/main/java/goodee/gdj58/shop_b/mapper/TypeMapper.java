@@ -10,7 +10,7 @@ import goodee.gdj58.shop_b.vo.Type;
 public interface TypeMapper {
 	
 	// 업종 카테고리 리스트(회원 가입 페이지)
-	List<String> selectTypeListForAddCompany();	
+	List<Type> selectTypeListForAddCompany();	
 	
 	List<Type> selectTypeList(int parentNo);
 }

@@ -72,10 +72,13 @@
           </a>
           <ul class="sidenav-second-level collapse" id="collapseMylistings4">
             <li>
-              <a href="${pageContext.request.contextPath }/resources/html/admin_section/listings.html">등록정보 조회</a>
+              <a href="${pageContext.request.contextPath }/company/companyOne">등록정보 조회</a>
             </li>
 			<li>
-              <a href="${pageContext.request.contextPath }/resources/html/admin_section/listings.html">등록정보 수정</a>
+              <a href="${pageContext.request.contextPath }/company/updateCompany">등록정보 수정</a>
+            </li>
+			<li>
+              <a href="${pageContext.request.contextPath }/company/updateCompanyPw">비밀번호 변경</a>
             </li>
           </ul>
         </li>      	

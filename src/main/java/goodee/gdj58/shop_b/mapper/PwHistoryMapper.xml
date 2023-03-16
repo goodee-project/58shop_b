@@ -2,6 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.PwHistoryMapper">
 
+	<!-- pw 이력 삭제(3개까지 보관) -->
+	<delete id = "deletePwHistory"
+			parameterType = "java.lang.String">
+		
+		DELETE
+		FROM pw_history
+		WHERE id = #{id}
+			AND createdate = (SELECT
+								MIN(createdate)
+							FROM pw_history
+							WHERE id = #{id})
+	
+	</delete>
+			
+
+
+
+	<!-- pwHistory count -->
+	<select id = "selectPwHistoryCount"
+			parameterType= "java.lang.String"
+			resultType = "int">
+	
+		SELECT
+			COUNT(id) count
+		FROM pw_history
+		WHERE id = #{id}
+		
+			
+	</select>
+
+	<!-- pwHistory 이력 중복 확인 -->
+	<!-- 사용 가능한 비밀번호 : null -->
+	<!-- 사용 불가능하다면 해당 비밀번호 생성날짜 리턴 -->
+	<select id = "selectPwHistory"
+			parameterType = "goodee.gdj58.shop_b.vo.PwHistory"
+			resultType = "java.lang.String">
+			
+		SELECT
+			createdate
+		FROM pw_history
+		WHERE id = #{id}
+			AND password = PASSWORD(#{password})
+	
+	</select>
+
 	<!-- 임시 확인용 pwHistory List -->
 	<select id = "selectPwHistoryList"
 			resultType = "goodee.gdj58.shop_b.vo.PwHistory">
@@ -15,16 +60,18 @@
 	
 	</select>
 
-	<!-- 업체 회원 가입 시 pw 이력 추가 -->
+	<!-- 업체 회원 가입 시 or 비밀번호 변경시  pw 이력 추가 -->
 	<insert id = "insertPwHistory"
 			parameterType = "goodee.gdj58.shop_b.vo.PwHistory">
 	
 		INSERT INTO pw_history (
 			id
 			, password
+			, createdate
 		) VALUES (
 			#{id}
 			, PASSWORD(#{password})
+			, NOW()
 		)
 	
 	</insert>

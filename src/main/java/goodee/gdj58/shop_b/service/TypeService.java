@@ -16,7 +16,7 @@ public class TypeService {
 	
 	
 	// 업종 카테고리 리스트(회원 가입 페이지)
-	public List<String> selectTypeListForAddCompany() {
+	public List<Type> selectTypeListForAddCompany() {
 		
 		return typeMapper.selectTypeListForAddCompany();
 		
