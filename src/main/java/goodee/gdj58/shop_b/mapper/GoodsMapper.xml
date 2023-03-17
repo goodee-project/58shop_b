@@ -1,22 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.GoodsMapper">
+	
+	<select id="selectCount" resultType="Integer" parameterType="java.lang.String">
+		SELECT
+			COUNT(*) count
+		FROM (SELECT 
+				g.createdate
+				, case when g.goods_active ='판매중' and go.goods_option_quantity!=0 then '판매중' 
+			  		    when g.goods_active = '판매중' and go.goods_option_quantity=0 then '일시품절' 
+			  		    when g.goods_active='비활성화' then '비활성화' 
+			  			 ELSE NULL END AS state
+			  FROM shopping_goods g
+			  INNER JOIN shopping_goods_option go
+			  ON g.goods_no = go.goods_no
+			  INNER JOIN shopping_type st
+			  ON st.type_no = g.type_no
+			  <where>
+			  	AND g.company_id = #{companyId}
+			  	<if test="searchWord != null and searchWord != ''">
+			  		<if test="searchType == goods_no">
+			  			AND g.${searchType} LIKE #{searchWord}
+			  		</if>
+			  		<if test="searchType != goods_no">
+			  			AND g.${searchType} LIKE CONCAT('%',#{searchWord},'%')
+			  		</if>
+			  	</if>
+			  	<if test="searchType != goods_no and typeNo != null and typeNo != 0">
+			  		AND g.type_no = #{typeNo} OR st.parent_no = #{typeNo}
+			  	</if>
+			  </where>
+			) t1
+		<where>
+			AND t1.state IS NOT NULL
+			<if test="searchType != goods_no and startDate != null and startDate != '' and endDate!= null and endDate != ''">
+				AND DATE_FORMAT(t1.${dateType}, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="searchType != goods_no and stateList != null and stateList.length != 0">
+				AND t1.state IN
+				<foreach collection="stateList" index="index" item="state" open="(" close=")" separator=",">
+			    	#{state}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<select id="selectCountByState" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT b.state, COUNT(a.state) cnt
+		FROM (
+				SELECT 
+					case when g.goods_active ='판매중' and go.goods_option_quantity!=0 then '판매중' 
+						 when g.goods_active = '판매중' and go.goods_option_quantity=0 then '일시품절' 
+						 when g.goods_active='비활성화' then '비활성화' ELSE NULL END AS state
+				FROM shopping_goods g
+				INNER JOIN shopping_goods_option go
+				ON go.goods_no = g.goods_no
+				WHERE g.company_id = #{companyId} 
+			) a 
+		RIGHT JOIN (
+			SELECT '판매중' state FROM dual
+			UNION all
+			SELECT '일시품절' state FROM dual
+			UNION all
+			SELECT '비활성화' state FROM DUAL
+		) b
+		ON a.state = b.state
+		GROUP BY b.state
+		ORDER BY b.state DESC;
+	</select>
+	
 	<select id="selectGoodsList" resultType="java.util.Map" parameterType="java.util.Map"> 
-		SELECT 
-			g.goods_no goodsNo
-			, g.company_id companyId
-			, g.type_no typeNo
-			, g.goods_name goodsName
-			, g.goods_price goodsPrice
-			, g.goods_active goodsActive
-			, g.goods_level goodsLevel
-			, gi.goods_img_no goodsImgNo
+		SELECT
+			t1.goods_no goodsNo
+			, goods_name goodsName
+			, goods_price goodsPrice
+			, goods_level goodsLevel
+			, t1.createdate createdate
+			, GROUP_CONCAT(t1.goods_option_content) goodsOptionContent
+			, t1.updatedate updatedate
+			, goods_active goodsActive
 			, gi.goods_img_save_name goodsImgSaveName
-		FROM shopping_goods g
-		INNER JOIN shopping_goods_img gi 
-		ON g.goods_no = gi.goods_no
-		WHERE g.company_id = #{companyId}
-		AND gi.goods_img_level = 0
+		FROM (SELECT 
+					g.goods_no 
+					, g.goods_name 
+					, g.goods_price 
+					, g.goods_level
+					, g.type_no
+					, g.company_id 
+					, g.createdate
+					, go.goods_option_content
+					, g.updatedate
+					, g.goods_active
+					, case when g.goods_active ='판매중' and go.goods_option_quantity!=0 then '판매중' 
+				  		   when g.goods_active = '판매중' and go.goods_option_quantity=0 then '일시품절' 
+				  		   when g.goods_active='비활성화' then '비활성화' 
+				  		   ELSE NULL END AS state
+				  FROM shopping_goods g
+				  INNER JOIN shopping_goods_option go
+				  ON g.goods_no = go.goods_no
+				  INNER JOIN shopping_type st
+				  ON st.type_no = g.type_no
+				  <where>
+				  	AND g.company_id = #{companyId}
+				  	<if test="searchWord != null and searchWord != ''">
+				  		<if test="searchType == goods_no">
+				  			AND g.${searchType} LIKE #{searchWord}
+				  		</if>
+				  		<if test="searchType != goods_no">
+				  			AND g.${searchType} LIKE CONCAT('%',#{searchWord},'%')
+				  		</if>
+				  	</if>
+				  	<if test="searchType != goods_no and typeNo != null and typeNo != 0">
+				  		AND g.type_no = #{typeNo} OR st.parent_no = #{typeNo}
+				  	</if>
+				  </where>
+				) t1
+		INNER join shopping_goods_img gi 
+		ON t1.goods_no = gi.goods_no
+		<where>
+			AND t1.state IS NOT NULL
+			<if test="searchType != goods_no and startDate != null and startDate != '' and endDate!= null and endDate != ''">
+				AND DATE_FORMAT(t1.${dateType}, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="searchType != goods_no and stateList != null and stateList.length != 0">
+				AND t1.state IN
+				<foreach collection="stateList" index="index" item="state" open="(" close=")" separator=",">
+			    	#{state}
+				</foreach>
+			</if>
+		</where>
+		
+		GROUP BY t1.goods_no
+		ORDER BY t1.createdate DESC
+		
+		LIMIT #{beginRow}, #{rowPerPage};
 	</select>
 	
 	<!-- insert 후 key 값 받아오기

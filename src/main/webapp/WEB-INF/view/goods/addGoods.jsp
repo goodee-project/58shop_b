@@ -103,7 +103,7 @@
 							</div>
 							<div class="col-md-5">
 								<div class="form-group">
-									<input type="checkbox" class="form-control" name="goodsActive" value="Y">
+									<input type="checkbox" class="form-control" name="goodsActive" value="판매중">
 								</div>
 							</div>
 						</div>			

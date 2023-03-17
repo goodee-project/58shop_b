@@ -51,6 +51,7 @@
 			, depth 
 			, createdate
 		FROM cts
+		WHERE parent_no = #{1}
 		ORDER BY groupNo, lvl
 	</select>
 </mapper>
