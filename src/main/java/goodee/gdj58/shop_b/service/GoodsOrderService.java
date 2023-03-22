@@ -7,19 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import goodee.gdj58.shop_b.mapper.OrderSheetMapper;
+import goodee.gdj58.shop_b.mapper.GoodsOrderMapper;
 
 @Service
 @Transactional
-public class OrderSheetService {
+public class GoodsOrderService {
 
 	@Autowired
-	private OrderSheetMapper orderSheetMapper;
+	private GoodsOrderMapper goodsOrderMapper;
 	
-	// 주문서 목록
-	public ArrayList<HashMap<String, Object>> selectOrderSheetList(String companyId) {
+	public ArrayList<HashMap<String, Object>> selectOrderList(String companyId) {
 		
-		return orderSheetMapper.selectOrderSheetList(companyId);
+		return goodsOrderMapper.selectOrderList(companyId);
 		
 	}
 	

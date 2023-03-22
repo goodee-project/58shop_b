@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.GoodsOrderMapper">
+
+	<select id = "selectOrderList"
+			parameterType = "java.lang.String"
+			resultType = "java.util.HashMap">
+			
+		SELECT
+			ord.goods_order_no goodsOrderNo
+			, ord.order_sheet_no orderSheetNo
+			, i.goods_img_save_name goodsImgSaveName
+			, g.goods_name goodsName
+			, op.goods_option_content goodsOptionContent
+			, ord.goods_order_quantity goodsOrderQuantity
+			, ord.goods_order_price goodsOrderPrice
+			, ord.goods_order_use_point goodsOrderUsePoint
+			, ord.goods_order_state goodsOrderState
+			, ord.createdate createdate
+		FROM shopping_goods_order ORD
+		INNER JOIN shopping_order_sheet s
+			ON ord.order_sheet_no = s.order_sheet_no
+		INNER JOIN shopping_goods_option op
+			ON ord.goods_option_no = op.goods_option_no
+		INNER JOIN shopping_goods g
+			ON op.goods_no = g.goods_no
+		INNER JOIN shopping_goods_img i
+			ON op.goods_no = i.goods_no
+		INNER JOIN shopping_customer_address ca
+			ON s.customer_address_no = ca.customer_address_no
+		WHERE s.company_id = #{companyId}
+		ORDER BY s.order_sheet_no ASC, ord.goods_order_no ASC		
+				
+	</select>
+
+
 </mapper>

@@ -40,7 +40,7 @@
           </a>
           <ul class="sidenav-second-level collapse" id="collapseMylistings2">
             <li>
-              <a href="">주문서 목록<span class="badge badge-pill badge-primary">6</span></a>
+              <a href="${pageContext.request.contextPath }/company/orderSheetList">주문서 목록<span class="badge badge-pill badge-primary">6</span></a>
             </li>
 			<li>
               <a href="">취소 / 교환 / 환불 <span class="badge badge-pill badge-success">6</span></a>
