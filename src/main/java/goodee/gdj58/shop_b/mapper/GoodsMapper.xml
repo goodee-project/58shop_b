@@ -1,8 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.GoodsMapper">
+
+	<update id="updateGoodsType" parameterType="java.util.Map">
+		UPDATE shopping_goods
+		SET type_no = #{typeNo}
+		WHERE company_id = #{companyId}
+		AND goods
+	</update>
+
+	<update id="updateGoods" parameterType="goodee.gdj58.shop_b.vo.Goods">
+		UPDATE shopping_goods
+		<set>
+		    <if test="goodsLevel != null and goodsLevel != ''">
+		    	, goods_level = #{goodsLevel}
+		    </if>
+		    <if test="goodsActive != null and goodsActive != ''">
+		    	, goods_active = #{goodsActive}
+		    </if>
+		</set>
+		WHERE company_id = #{companyId}
+		AND goods_no = #{goodsNo}
+	</update>
+	
+	<update id="updateGoodsOne" parameterType="goodee.gdj58.shop_b.vo.Goods">
+		UPDATE shopping_goods 
+		SET goods_name = #{goodsName}
+			, goods_price = #{goodsPrice}
+		WHERE company_id = #{companyId}
+		AND goods_no = #{goodsNo}
+	</update>
+	
+	<select id="goodsOne" resultType="goodee.gdj58.shop_b.vo.Goods" parameterType="java.util.Map">
+		SELECT 
+			goods_no goodsNo
+			, goods_name goodsName
+			, goods_price goodsPrice
+			, goods_level goodsLevel
+			, type_no typeNo
+			, goods_active goodsActive
+		  FROM shopping_goods 
+		  WHERE
+		  	 company_id = #{companyId} 
+		  	 AND goods_no IN
+		  	 <foreach collection="goodsNoList" index="index" item="goodsNo" open="(" close=")" separator=",">
+		    	#{goodsNo}
+			</foreach>
+	</select>
+	
+	<update id="deleteGoods" parameterType="java.util.Map">
+		UPDATE shopping_goods 
+		SET goods_active = '삭제'
+		WHERE goods_no = #{goodsNo}
+		AND company_id = #{companyId}
+	</update>
 	
 	<select id="selectCount" resultType="Integer" parameterType="java.lang.String">
+	
 		SELECT
 			COUNT(*) count
 		FROM (SELECT 
@@ -44,31 +98,73 @@
 			</if>
 		</where>
 	</select>
+	
 	<select id="selectCountByState" resultType="java.util.Map" parameterType="java.lang.String">
-		SELECT b.state, COUNT(a.state) cnt
-		FROM (
-				SELECT 
-					case when g.goods_active ='판매중' and go.goods_option_quantity!=0 then '판매중' 
-						 when g.goods_active = '판매중' and go.goods_option_quantity=0 then '일시품절' 
-						 when g.goods_active='비활성화' then '비활성화' ELSE NULL END AS state
-				FROM shopping_goods g
-				INNER JOIN shopping_goods_option go
-				ON go.goods_no = g.goods_no
-				WHERE g.company_id = #{companyId} 
-			) a 
+		
+		SELECT 
+			t.state
+			, COUNT(t.state) count
+		FROM ( SELECT 
+					go.goods_option_no
+					, if(g.goods_active != '삭제', '전체', NULL) AS state
+				  FROM shopping_goods g
+				  INNER JOIN shopping_goods_option go
+				  ON g.goods_no = go.goods_no
+				  INNER JOIN shopping_type st
+				  ON st.type_no = g.type_no
+				  WHERE company_id = #{companyId}
+				) t
+		WHERE t.state IS NOT null
+					
+		UNION all			
+					
+		SELECT
+			b.state
+			, COUNT(t1.state) count
+		FROM (SELECT 
+				go.goods_option_no
+				, case when g.goods_active ='판매중' and go.goods_option_quantity!=0 then '판매중' 
+			  		    when g.goods_active = '판매중' and go.goods_option_quantity=0 then '일시품절' 
+			  		    when g.goods_active='비활성화' then '비활성화' 
+			  			 ELSE NULL END AS state
+			  FROM shopping_goods g
+			  INNER JOIN shopping_goods_option go
+			  ON g.goods_no = go.goods_no
+			  
+			  WHERE company_id = #{companyId}
+			) t1
 		RIGHT JOIN (
-			SELECT '판매중' state FROM dual
-			UNION all
-			SELECT '일시품절' state FROM dual
-			UNION all
-			SELECT '비활성화' state FROM DUAL
-		) b
-		ON a.state = b.state
+					SELECT '판매중' state FROM dual
+					UNION all
+					SELECT '일시품절' state FROM dual
+					UNION all
+					SELECT '비활성화' state FROM DUAL
+				) b
+		ON t1.state = b.state	
 		GROUP BY b.state
-		ORDER BY b.state DESC;
+		ORDER BY case when state ='전체' then 0 
+		  		      when state = '판매중' then 1
+		  		      when state='일시품절' then 2
+		  			  ELSE 3 END asc
 	</select>
 	
-	<select id="selectGoodsList" resultType="java.util.Map" parameterType="java.util.Map"> 
+	<select id="selectGoodsList" resultType="java.util.Map" parameterType="java.util.Map">
+		WITH RECURSIVE cts AS (
+		    SELECT 
+			 	type_no
+		    	, cast(type_content as CHAR(100)) lvl
+		    FROM shopping_type 
+		    WHERE parent_no = 0
+		    	UNION ALL
+		    SELECT
+			 	st2.type_no
+		    	, CONCAT(c.lvl, '>', st2.type_content) lvl
+		    FROM shopping_type st2
+		    INNER JOIN cts c
+		    ON st2.parent_no = c.type_no
+		)
+
+	 
 		SELECT
 			t1.goods_no goodsNo
 			, goods_name goodsName
@@ -76,9 +172,11 @@
 			, goods_level goodsLevel
 			, t1.createdate createdate
 			, GROUP_CONCAT(t1.goods_option_content) goodsOptionContent
+			, SUM(t1.goods_option_quantity) goodsQuantity
 			, t1.updatedate updatedate
 			, goods_active goodsActive
 			, gi.goods_img_save_name goodsImgSaveName
+			, cts.lvl
 		FROM (SELECT 
 					g.goods_no 
 					, g.goods_name 
@@ -87,6 +185,7 @@
 					, g.type_no
 					, g.company_id 
 					, g.createdate
+					, go.goods_option_quantity
 					, go.goods_option_content
 					, g.updatedate
 					, g.goods_active
@@ -114,8 +213,10 @@
 				  	</if>
 				  </where>
 				) t1
-		INNER join shopping_goods_img gi 
+		INNER JOIN shopping_goods_img gi 
 		ON t1.goods_no = gi.goods_no
+		INNER JOIN cts 
+		ON t1.type_no = cts.type_no
 		<where>
 			AND t1.state IS NOT NULL
 			<if test="searchType != goods_no and startDate != null and startDate != '' and endDate!= null and endDate != ''">

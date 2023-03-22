@@ -51,7 +51,11 @@
 			, depth 
 			, createdate
 		FROM cts
-		WHERE parent_no = #{1}
+		<where>
+			<if test="parentNo != null and parentNo != '-1'">
+				parent_no = #{1}
+			</if>
+		</where>
 		ORDER BY groupNo, lvl
 	</select>
 </mapper>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import goodee.gdj58.shop_b.service.TypeService;
@@ -16,7 +17,7 @@ public class TypeRestController {
 	@Autowired TypeService typeService;
 	
 	@PostMapping("/type")
-	public List<Type>selectTypeList(int parentNo) {
+	public List<Type>selectTypeList(@RequestParam(value="parentNo", defaultValue="-1") int parentNo) {
 		return typeService.selectTypeList(parentNo);
 	}
 }

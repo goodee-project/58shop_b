@@ -29,7 +29,53 @@ public class GoodsController {
 	@Autowired private GoodsService goodsService;
 	@Autowired private TypeService typeService;
 	
-
+	
+	// 상품 수정
+	@GetMapping("/goods/updateGoodsOne")
+	public String updateGoodsOne(HttpSession session, Model model
+							, @RequestParam(value="goodsNo", required=true) int goodsNo) {
+		
+		log.debug(TeamColor.BLUE + goodsNo + "<- goodsNo, updateGoods");
+		
+		/* 로그인한 업체 아이디 가져오기 
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String companyId = loginCompany.getCompanyId();
+		*/
+		
+		// mock id
+		String companyId = "com1";
+		
+		Goods goods = goodsService.goodsOne(companyId, goodsNo);
+		
+		model.addAttribute("goods", goods);
+		
+		return "goods/updateGoods";
+	}
+	// 상품 수정
+	@PostMapping("/goods/updateGoodsOne")
+	public String updateGoodsOne(HttpSession session, Goods goods
+						, @RequestParam(value="goodsOptionContent", required=false) String[] cl
+						, @RequestParam(value="goodsOptionQuantity", required=false) Integer[] ql) {
+		
+		log.debug(TeamColor.BLUE + goods + "<- goods, updateGoods");
+		
+		/*
+		// 로그인한 업체 아이디 가져오기 
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String companyId = loginCompany.getCompanyId();
+		goods.setCompanyId(companyId);
+		*/
+		
+		// mock id
+		String companyId = "com1";
+		
+		int row = goodsService.updateGoodsOne(companyId, goods, cl, ql);
+		log.debug(TeamColor.BLUE + row + "<- row, updateGoods");
+		
+		return "redirect:/goods/goodsList";
+	}
+	
+	// 상품 목록
 	@GetMapping("/goods/goodsList")
 	public String selectGoodsList(HttpSession session, Model model
 								, @RequestParam(value="searchType", defaultValue="") String searchType
@@ -63,11 +109,6 @@ public class GoodsController {
 		
 		// 페이징 
 		int goodsCount = goodsService.selectCount(companyId, searchType, searchWord, stateList, typeNo, dateType, startDate, endDate);
-		if(goodsCount == 0) { // 검색 결과가 없으면 빈 list 반환
-			model.addAttribute("goodsList", Collections.EMPTY_LIST);
-			model.addAttribute("goodsStateList", goodsStateList);
-			return "goods/goodsList"; 
-		}
 		
 		int lastPage = goodsCount%rowPerPage==0 ? goodsCount/rowPerPage : goodsCount/rowPerPage + 1;
 		
@@ -90,7 +131,12 @@ public class GoodsController {
 		log.debug(TeamColor.BLUE + lastPage + "<- lastPage, selectGoodsList");
 		
 		// 상품 목록
-		List<Map<String, Object>> goodsList = goodsService.selectGoodsList(companyId, searchType, searchWord, stateList, typeNo, dateType, startDate, endDate, currentPage, rowPerPage);
+		List<Map<String, Object>> goodsList = Collections.emptyList(); 
+		
+		if(goodsCount != 0) { // 검색된 상품이 없다면 빈 객체 반환
+			goodsList = goodsService.selectGoodsList(companyId, searchType, searchWord, stateList, typeNo, dateType, startDate, endDate, currentPage, rowPerPage);
+		}
+		
 		log.debug(TeamColor.BLUE + goodsList + "<- goodsList, selectGoodsList");
 		
 		model.addAttribute("startPage", startPage);
@@ -114,6 +160,8 @@ public class GoodsController {
 		return "goods/goodsList"; 
 	}
 	
+	
+	// 상품등록
 	@GetMapping("/goods/addGoods")
 	public String insertGoods(Model model) {
 		List<Type> typeList = typeService.selectTypeList(0);

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.GoodsOptionMapper">
+	
+	<select id="selectGoodsQuantity" resultType="goodee.gdj58.shop_b.vo.GoodsOption" parameterType="Integer">	 
+		SELECT 
+			goods_option_no goodsOptionNo
+			, goods_no goodsNo
+			, goods_option_content goodsOptionContent
+			, goods_option_quantity goodsOptionQuantity
+		FROM shopping_goods_option
+		WHERE goods_no = #{goodsNo}
+		ORDER BY goodsOptionContent asc;
+	</select>
+	
 	<insert id="insertGoodsOption" parameterType="goodee.gdj58.shop_b.vo.GoodsOption" useGeneratedKeys="true"
         keyProperty="goodsOptionNo" keyColumn="goods_option_no">
 		INSERT INTO shopping_goods_option(

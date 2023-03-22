@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import goodee.gdj58.shop_b.mapper.GoodsMapper;
 import goodee.gdj58.shop_b.mapper.GoodsOptionMapper;
 import goodee.gdj58.shop_b.mapper.StockHistoryMapper;
@@ -28,6 +27,79 @@ public class GoodsService {
 	@Autowired private GoodsOptionMapper goodsOptionMapper;
 	@Autowired private StockHistoryMapper stockHistoryMapper;
 	
+	public int updateGoodsType(String companyId, int typeNo, Integer[] goodsNoList) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("typeNo", typeNo);
+		map.put("goodsNoList", goodsNoList);
+		
+		return goodsMapper.updateGoodsType(map);
+	}
+	
+	// 상품 수정 
+	public int updateGoods(String companyId, Goods goods) {
+		goods.setCompanyId(companyId);
+	
+		return goodsMapper.updateGoods(goods);
+	}
+	
+	// 상품 수정 
+	public int updateGoodsOne(String companyId, Goods goods, String[] cl, Integer[] ql) {
+		int row = 0;
+	
+		// 1. 상품 수정
+		goods.setCompanyId(companyId);
+		row += goodsMapper.updateGoodsOne(goods);
+		
+		// 2. 옵션 추가
+		if(cl != null) {
+			for(int i=0; i< cl.length; i++) {
+				GoodsOption go = new GoodsOption();
+				go.setGoodsNo(goods.getGoodsNo());
+				go.setGoodsOptionContent(cl[i]);
+				
+				if(ql[i] == null) {
+					ql[i] = 0;
+				}
+				go.setGoodsOptionQuantity(ql[i]);
+				
+				row += goodsOptionMapper.insertGoodsOption(go);
+				
+				// 4. 재고 입력
+				if(ql[i] != 0) { // 재고가 입력되었다면 재고이력에 추가
+					StockHistory sh = new StockHistory();
+					sh.setGoodsOptionNo(go.getGoodsOptionNo());
+					sh.setStockHistoryQuantity(ql[i]);
+					sh.setStockHistoryState("입고");
+					sh.setStockHistoryMemo("");
+					
+					stockHistoryMapper.insertStockHistory(sh);
+				}
+			}
+		}
+		return row;
+	}
+	// 상품 상세
+	public Goods goodsOne(String companyId, int goodsNo){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("goodsNo", goodsNo);
+		
+		return goodsMapper.goodsOne(map);
+	}
+	
+	// 상품 삭제 처리
+	public int deleteGoods(String companyId, String[] goodsNo) {
+		int row = 0;
+		for(String s : goodsNo) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyId", companyId);
+			map.put("goodsNo", s);
+			row += goodsMapper.deleteGoods(map);
+		}
+		return row;
+	}
+	
 	// 상품 개수
 	public int selectCount(String companyId, String searchType, String searchWord, String[] stateList
 						, int typeNo, String dateType, String startDate, String endDate) {
@@ -45,18 +117,7 @@ public class GoodsService {
 	
 	// 상품 상태별 개수
 	public List<Map<String, Object>> selectCountByState(String companyId){
-		List<Map<String, Object>> list = goodsMapper.selectCountByState(companyId);
-		int cnt = 0;
-		String state = "전체";
-		for(Map<String, Object> map : list) {
-			cnt += (Long)map.get("cnt");
-		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("state", state);
-		map.put("cnt", cnt);
-		list.add(map);
-		
-		return list;
+		return goodsMapper.selectCountByState(companyId);
 	}
 	
 	
@@ -126,8 +187,6 @@ public class GoodsService {
 				
 				stockHistoryMapper.insertStockHistory(sh);
 			}
-			
-			
 		}
 		
 		
