@@ -37,13 +37,9 @@ public class GoodsController {
 		
 		log.debug(TeamColor.BLUE + goodsNo + "<- goodsNo, updateGoods");
 		
-		/* 로그인한 업체 아이디 가져오기 
+		// 로그인한 업체 아이디 가져오기 
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
-		*/
-		
-		// mock id
-		String companyId = "com1";
 		
 		Goods goods = goodsService.goodsOne(companyId, goodsNo);
 		
@@ -59,15 +55,10 @@ public class GoodsController {
 		
 		log.debug(TeamColor.BLUE + goods + "<- goods, updateGoods");
 		
-		/*
 		// 로그인한 업체 아이디 가져오기 
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
 		goods.setCompanyId(companyId);
-		*/
-		
-		// mock id
-		String companyId = "com1";
 		
 		int row = goodsService.updateGoodsOne(companyId, goods, cl, ql);
 		log.debug(TeamColor.BLUE + row + "<- row, updateGoods");
@@ -95,14 +86,11 @@ public class GoodsController {
 		log.debug(TeamColor.BLUE + startDate + "<- startDate, selectGoodsList");
 		log.debug(TeamColor.BLUE + endDate + "<- endDate, selectGoodsList");
 		
-		/* 로그인한 업체 아이디 가져오기 
+		// 로그인한 업체 아이디 가져오기 
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
-		*/
-		
-		// mock id
-		String companyId = "com1";
-		
+	
+	
 		// 상품 상태별 개수 (판매중, 비활성화 ... )
 		List<Map<String, Object>> goodsStateList = goodsService.selectCountByState(companyId);
 		log.debug(TeamColor.BLUE + goodsStateList + "<-- goodsStateList, selectGoodsList");
@@ -181,16 +169,12 @@ public class GoodsController {
 		log.debug(TeamColor.BLUE + ql.length + "<- ql.length, insertGoods");
 		log.debug(TeamColor.BLUE + picList.size() + "<- picList.size(), insertGoods");
 		
-		/*
+		
 		// 로그인한 업체 아이디 가져오기 
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
 		goods.setCompanyId(companyId);
-		*/
-		
-		// mock id
-		String companyId = "com1";
-		goods.setCompanyId(companyId);
+	
 		goods.setGoodsLevel(0); // 기본값 0 
 		
 		// 프로젝트 내에 업로드 파일 경로 구하기

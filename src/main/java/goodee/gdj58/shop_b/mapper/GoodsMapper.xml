@@ -6,7 +6,10 @@
 		UPDATE shopping_goods
 		SET type_no = #{typeNo}
 		WHERE company_id = #{companyId}
-		AND goods
+		AND goods_no IN
+		<foreach collection="goodsNoList" index="index" item="goodsNo" open="(" close=")" separator=",">
+	    	#{goodsNo}
+		</foreach>
 	</update>
 
 	<update id="updateGoods" parameterType="goodee.gdj58.shop_b.vo.Goods">

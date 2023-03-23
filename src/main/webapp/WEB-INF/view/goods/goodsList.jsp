@@ -32,8 +32,6 @@
   <link href="${pageContext.request.contextPath }/resources/html/admin_section/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <!-- Plugin styles -->
   <link href="${pageContext.request.contextPath }/resources/html/admin_section/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
-  <!-- Your custom styles -->
-  <link href="${pageContext.request.contextPath }/resources/html/admin_section/css/custom.css" rel="stylesheet">
 
 <script src="${pageContext.request.contextPath }/resources/html/admin_section/vendor/jquery/jquery.min.js"></script>
 <script src="http://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
@@ -84,7 +82,7 @@
 				    	<div class="row">
 				    		<table class="table table-borderless" style="width:100%; cellspacing:0" >
 				    			<tr>
-				    				<th>검색어</th>
+				    				<th class="col-2">검색어</th>
 				    				<td>
 				    					<div class="row">
 											<div class="col-md-3">
@@ -107,20 +105,17 @@
 				    			</tr>
 				    			
 				    			<tr>
-				    				<th>카테고리</th>
+				    				<th>판매상태</th>
 				    				<td>
-				    					<div class="row" id="type">
-				    						<c:forEach begin="0" end="2" var="t">
-				    							<div class="col-md-3">
-							    					<select class="form-control" id="${t}">
-							    						<option value="">:: ${t+1}차 분류 ::</option>
-							    					</select>
-							    				</div>
-				    						</c:forEach>
-				    						
+				    					<div class="row">
+				    						<div class="col-md-8">
+						    					<c:set var="sl" value="${fn:join(stateList, ',')}" />
+						    					
+						    					<c:forEach var="s" items="${goodsStateList}">
+						    						<input type="checkbox" class="" name="state" value="${s.state}" <c:if test="${fn:contains(sl, s.state)}">checked</c:if>> ${s.state}
+						    					</c:forEach>
+					    					</div>
 				    					</div>
-				    					<div class="text-muted"><small>* 하위분류가 포함되어 검색됩니다.</small></div>
-				    					<input type="hidden" name="typeNo">
 				    				</td>
 				    			</tr>
 			    			</table>
@@ -132,18 +127,21 @@
 					    		<table class="table table-borderless" style="width:100%; cellspacing:0">
 							
 									<tr>
-					    				<th>판매상태</th>
+										<th class="col-2">카테고리</th>
 					    				<td>
-					    					<div class="row">
-					    						<div class="col-md-8">
-							    					<c:set var="sl" value="${fn:join(stateList, ',')}" />
-							    					
-							    					<c:forEach var="s" items="${goodsStateList}">
-							    						<input type="checkbox" class="" name="state" value="${s.state}" <c:if test="${fn:contains(sl, s.state)}">checked</c:if>> ${s.state}
-							    					</c:forEach>
-						    					</div>
+					    					<div class="row" id="type">
+					    						<c:forEach begin="0" end="2" var="t">
+					    							<div class="col-md-3">
+								    					<select class="form-control" id="${t}">
+								    						<option value="">:: ${t+1}차 분류 ::</option>
+								    					</select>
+								    				</div>
+					    						</c:forEach>
 					    					</div>
+					    					<div class="text-muted"><small>* 하위분류가 포함되어 검색됩니다.</small></div>
+					    					<input type="hidden" name="typeNo">
 					    				</td>
+					    				
 					    			</tr>
 					    			
 					    			<tr>
@@ -179,7 +177,7 @@
 							</a>
 						</div>
 				    	<div class="text-center">
-				    		<button type="reset">초기화</button><button type="button" id="searchBtn">검색</button>
+				    		<button type="reset" class="btn_1 gray">초기화</button><button type="button" id="searchBtn" class="btn_1">검색</button>
 				    	</div>
 			    	</div>
 			    </div>
@@ -193,13 +191,13 @@
 					<h2><i class="fa fa-gift"></i>상품목록</h2>
 				</div>
 				<div class="row mb-3">
-					<div class="col-sm-12 col-md-6">
-						<button type="button" id="updateBtn">수정</button>
-	   					<button type="button" id="deleteBtn">삭제</button>
-	   					<button type="button" id="typeBtn" data-bs-target="#typeModal" data-bs-toggle="modal">카테고리 일괄 변경</button>
+					<div class="col-sm-12 col-md-8">
+						<button type="button" id="updateBtn" class="btn_1">수정</button>
+	   					<button type="button" id="deleteBtn" class="btn_1">삭제</button>
+	   					<button type="button" id="typeBtn" data-bs-target="#typeModal" data-bs-toggle="modal" class="btn_1">카테고리 일괄 변경</button>
 	   					<a data-toggle="popover" title="상품 정보를 수정하려면?" data-bs-content="'상품번호'클릭 시 상품 수정이 가능합니다."><i class="fa fa-question-circle"></i>&nbsp;<small>상품 정보를 수정하려면?</small></a>
    					</div>
-   					<div class="col-sm-12 col-md-6">
+   					<div class="col-sm-12 col-md-4">
    						<div class="float-right">
 							<select id="rowPerPage" style="width: 75px" class="form-control form-control-sm d-inline-block">
 								<c:set var="rl" value="${[30, 50, 100]}" />
@@ -358,7 +356,9 @@
 	        				<td id="typeContainer"></td>
 	        			</tr>	
 	        		</table>
-	        		<button type="button" id="submitBtn">변경</button>
+	        		<div class="text-center">
+	        			<button type="button" id="submitBtn" class="btn_1">변경</button>
+	        		</div>
         		</form>
         	</div>
 	      </div>
@@ -369,22 +369,24 @@
     <!-- 카테고리 변경 -->
     <script>
     	$('#submitBtn').click(function(){
-    		let checkedValue = [];
+    		let $updateForm = $('#updateTypeForm');
+    		
    			$('.checkboxBtn:checked').each(function(){
-   				checkedValue.push($(this).val());
+   				let selectedName = 'goodsNo'
+   		         $updateForm.append($('<input>').attr('type', 'hidden').attr('name', selectedName).val($(this).val()));
    			});
-   			$('#updateTypeForm').serialize();
+   			
+   			let typeNo = $('input[name=typeNo]:checked').val();
+   			
+   			console.log($updateForm.serialize());
    		
-   			let typeNo = $('#updateTypeForm').serialize();
-
-    		$.ajax({
+			$.ajax({
     			type: 'post'
     			, url: '/58shop_b/goods/updateGoodsType'
-    			, data: {goodsNoList : checkedValue
-    					, typeNo}
+    			, data: $updateForm.serialize()
 				, success: function(model){
 					console.log(model);
-					//location.reload();
+					location.reload();
 				}
 				, error: function(){
 					alert('시스템 에러');
@@ -620,6 +622,10 @@
 	<!-- 수정 -->
 	<script>
 		$('#updateBtn').click(function(){
+			if($('.checkboxBtn:checked').length == 0){
+				alert('상품을 선택하세요.');
+   				return false;
+			}
 		    $('.trRow').each(function() {
 		        if($(this).find('.checkboxBtn').is(':checked')) {
 		        	
@@ -659,9 +665,11 @@
 	<!-- 카테고리 일괄 변경 -->
 	<script>
 		$('#typeBtn').click(function(){
-			
+			if($('.checkboxBtn:checked').length == 0){
+				alert('상품을 선택하세요.');
+   				return false;
+			}
    			let data = typeList(-1);
-   			console.log(data);
    			
    			let html = '';
    			for(let i=0; i<data.length; i++){
@@ -669,11 +677,12 @@
    				for(let j=0; j<data[i].depth; j++){
    					depth += '&nbsp;&nbsp;&nbsp;';
    				}
-   				console.log(depth);
    				html += '<input type="radio" name="typeNo" value="'+data[i].typeNo+'">'+depth+data[i].typeContent+'<br>';
    			}
    			
+   			
    			$('#typeContainer').html(html);
+   			
 		});
 	</script>
 
