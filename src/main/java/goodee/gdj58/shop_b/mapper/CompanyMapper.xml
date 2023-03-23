@@ -78,6 +78,7 @@
 	
 		SELECT
 			company_id companyId
+			, company_name companyName
 		FROM shopping_company
 		WHERE company_id = #{companyId}
 			AND company_pw = PASSWORD(#{companyPw})
