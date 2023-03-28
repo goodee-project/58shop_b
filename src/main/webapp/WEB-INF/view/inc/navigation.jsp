@@ -18,13 +18,13 @@
           </a>
           <ul class="sidenav-second-level collapse" id="collapseMylistings1">
             <li>
-              <a href="${pageContext.request.contextPath }/goods/goodsList">상품 목록</a>
+              <a href="${pageContext.request.contextPath }/goods/goodsList">상품 조회/수정</a>
             </li>
             <li>
               <a href="${pageContext.request.contextPath }/goods/addGoods">상품 등록</a>
             </li>
 			<li>
-              <a href="">상품 수정</a>
+              <a href="${pageContext.request.contextPath}/goods/goodsOptionList">재고 관리</a>
             </li>
 			<li>
               <a href="">상품 삭제</a>

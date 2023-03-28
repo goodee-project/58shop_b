@@ -1,6 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.GoodsOptionMapper">
+	<update id="updateGoodsOptionQuantity" parameterType="goodee.gdj58.shop_b.vo.GoodsOption">
+		UPDATE shopping_goods_option 
+		SET goods_option_quantity = goods_option_quantity + #{goodsOptionQuantity}
+		WHERE goods_option_no = #{goodsOptionNo}
+	</update>
+
+	<select id="selectGoodsOptionCount" resultType="Integer" parameterType="java.util.Map">
+		SELECT
+			COUNT(*) count
+		FROM (SELECT 
+				g.createdate
+				, case when g.goods_active ='판매중' and go.goods_option_quantity!=0 then '판매중' 
+			  		   when g.goods_active = '판매중' and go.goods_option_quantity=0 then '일시품절' 
+			  		   when g.goods_active='비활성화' then '비활성화' 
+			  		   ELSE NULL END AS state
+			  FROM shopping_goods g
+			  INNER JOIN shopping_goods_option go
+			  ON g.goods_no = go.goods_no
+			  INNER JOIN shopping_type st
+			  ON st.type_no = g.type_no
+			  <where>
+			  	AND g.company_id = #{companyId}
+			  	<if test="searchWord != null and searchWord != ''">
+			  		<if test="searchType == goods_no">
+			  			AND g.${searchType} LIKE #{searchWord}
+			  		</if>
+			  		<if test="searchType != goods_no">
+			  			AND g.${searchType} LIKE CONCAT('%',#{searchWord},'%')
+			  		</if>
+			  	</if>
+			  	<if test="searchType != goods_no and typeNo != null and typeNo != 0">
+			  		AND g.type_no = #{typeNo} OR st.parent_no = #{typeNo}
+			  	</if>
+			  	<if test="searchType != goods_no and startDate != null and startDate != '' and endDate!= null and endDate != ''">
+					AND DATE_FORMAT(g.${dateType}, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+				</if>
+			  </where>
+			) t1
+		<where>
+			AND t1.state IS NOT NULL
+			<if test="searchType != goods_no and stateList != null and stateList.length != 0">
+				AND t1.state IN
+				<foreach collection="stateList" index="index" item="state" open="(" close=")" separator=",">
+			    	#{state}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectGoodsOptionList" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			t1.goods_no goodsNo
+			, goods_name goodsName
+			, t1.goods_option_no goodsOptionNo
+			, t1.goods_option_content goodsOptionContent
+			, t1.goods_option_quantity goodsOptionQuantity
+		FROM (SELECT 
+					g.goods_no 
+					, g.goods_name 
+					, g.type_no
+					, g.company_id 
+					, g.createdate
+					, g.updatedate 
+					, go.goods_option_no
+					, go.goods_option_quantity
+					, go.goods_option_content
+					, case when g.goods_active ='판매중' and go.goods_option_quantity!=0 then '판매중' 
+				  		   when g.goods_active = '판매중' and go.goods_option_quantity=0 then '일시품절' 
+				  		   when g.goods_active='비활성화' then '비활성화' 
+				  		   ELSE NULL END AS state
+			  FROM shopping_goods g
+			  INNER JOIN shopping_goods_option go
+			  ON g.goods_no = go.goods_no
+			  INNER JOIN shopping_type st
+			  ON st.type_no = g.type_no
+			  <where>
+			  	AND g.company_id = #{companyId}
+			  	<if test="searchWord != null and searchWord != ''">
+			  		<if test="searchType == goods_no">
+			  			AND g.${searchType} LIKE #{searchWord}
+			  		</if>
+			  		<if test="searchType != goods_no">
+			  			AND g.${searchType} LIKE CONCAT('%',#{searchWord},'%')
+			  		</if>
+			  	</if>
+			  	<if test="searchType != goods_no and typeNo != null and typeNo != 0">
+			  		AND g.type_no = #{typeNo} OR st.parent_no = #{typeNo}
+			  	</if>
+			  </where>
+			) t1
+			
+		INNER JOIN shopping_type st
+		ON t1.type_no = st.type_no
+		<where>
+			AND t1.state IS NOT NULL
+			<if test="searchType != goods_no and startDate != null and startDate != '' and endDate!= null and endDate != ''">
+				AND DATE_FORMAT(t1.${dateType}, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="searchType != goods_no and stateList != null and stateList.length != 0">
+				AND t1.state IN
+				<foreach collection="stateList" index="index" item="state" open="(" close=")" separator=",">
+			    	#{state}
+				</foreach>
+			</if>
+		</where>
+		
+		ORDER BY t1.createdate DESC		
+		LIMIT #{beginRow}, #{rowPerPage};
+	</select>
 	
 	<select id="selectGoodsQuantity" resultType="goodee.gdj58.shop_b.vo.GoodsOption" parameterType="Integer">	 
 		SELECT 

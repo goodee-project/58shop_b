@@ -4,6 +4,8 @@ package goodee.gdj58.shop_b.restcontroller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 public class GoodsRestController {
 	@Autowired private GoodsService goodsService;
 	
-	@PostMapping("/goods/updateGoodsType")
+	// 상품 카테고리 수정
+	@PatchMapping("/goods/goodsType")
 	public int updateGoodsType(HttpSession session
 							, @RequestParam(value="typeNo", required=true) int typeNo
 							, @RequestParam(value="goodsNo") Integer[] goodsNoList) {
@@ -39,7 +42,7 @@ public class GoodsRestController {
 	}
 	
 	// 상품 수정
-	@PostMapping("/goods/updateGoods")
+	@PatchMapping("/goods")
 	public int updateGoods(HttpSession session, Goods goods) {
 		log.debug(TeamColor.BLUE + goods + "<- goods, updateGoods");
 		
@@ -55,7 +58,7 @@ public class GoodsRestController {
 	}
 	
 	// 상품 삭제
-	@PostMapping("/goods/delete")
+	@DeleteMapping("/goods")
 	public int deleteGoods(HttpSession session, @RequestParam(value="goodsNo[]") String[] goodsNo) {
 		log.debug(TeamColor.BLUE + goodsNo + "<- goodsNo, deleteGoods");
 		

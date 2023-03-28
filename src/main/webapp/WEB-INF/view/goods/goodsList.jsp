@@ -64,7 +64,7 @@
 		        </li>
 		    </ol>
 		    
-		    <!-- 판매상태별 조회 -->
+		    <!-- 판매상태별 개수 -->
 		    <div class="box_general padding_bottom">
 		    	<div class="row">
 		    		<c:forEach var="s" items="${goodsStateList}">
@@ -110,9 +110,14 @@
 				    					<div class="row">
 				    						<div class="col-md-8">
 						    					<c:set var="sl" value="${fn:join(stateList, ',')}" />
-						    					
+						    				
 						    					<c:forEach var="s" items="${goodsStateList}">
-						    						<input type="checkbox" class="" name="state" value="${s.state}" <c:if test="${fn:contains(sl, s.state)}">checked</c:if>> ${s.state}
+						    						<c:if test="${s.state == '전체'}">
+						    							<input type="checkbox" id="stateAllCheck" value=""> ${s.state}
+						    						</c:if>
+						    						<c:if test="${s.state != '전체'}">
+						    							<input type="checkbox" name="state" value="${s.state}" <c:if test="${fn:contains(sl, s.state)}">checked</c:if>> ${s.state}
+						    						</c:if>
 						    					</c:forEach>
 					    					</div>
 				    					</div>
@@ -155,11 +160,11 @@
 							    					</select>
 					    						</div>
 					    						<div class="col-md-8">
-							    					<button type="button" class="dateBtn">오늘</button>
-							    					<button type="button" class="dateBtn">1개월</button>
-							    					<button type="button" class="dateBtn">6개월</button>
-							    					<button type="button" class="dateBtn">1년</button>
-							    					<button type="button" class="dateBtn">전체기간</button>
+							    					<button type="button" class="dateBtn btn_1">오늘</button>
+							    					<button type="button" class="dateBtn btn_1">1개월</button>
+							    					<button type="button" class="dateBtn btn_1">6개월</button>
+							    					<button type="button" class="dateBtn btn_1">1년</button>
+							    					<button type="button" class="dateBtn btn_1">전체기간</button>
 													<input type="date" name="startDate" value="${startDate}"> ~
 													<input type="date" name="endDate" value="${endDate}">
 												</div>
@@ -195,13 +200,15 @@
 						<button type="button" id="updateBtn" class="btn_1">수정</button>
 	   					<button type="button" id="deleteBtn" class="btn_1">삭제</button>
 	   					<button type="button" id="typeBtn" data-bs-target="#typeModal" data-bs-toggle="modal" class="btn_1">카테고리 일괄 변경</button>
-	   					<a data-toggle="popover" title="상품 정보를 수정하려면?" data-bs-content="'상품번호'클릭 시 상품 수정이 가능합니다."><i class="fa fa-question-circle"></i>&nbsp;<small>상품 정보를 수정하려면?</small></a>
+	   					<a data-toggle="popover" title="상품 정보를 수정하려면?" data-bs-content="'상품번호'클릭 시 상품 수정이 가능합니다.">
+	   						<i class="fa fa-question-circle"></i>&nbsp;<small>상품 정보를 수정하려면?</small>
+	   					</a>
    					</div>
    					<div class="col-sm-12 col-md-4">
    						<div class="float-right">
 							<select id="rowPerPage" style="width: 75px" class="form-control form-control-sm d-inline-block">
-								<c:set var="rl" value="${[30, 50, 100]}" />
-								<c:forEach items="${rl}" var="r">
+	
+								<c:forEach items="${fn:split('30,50,100',',')}" var="r">
 									<c:if test="${rowPerPage == r}">
 										<option value="${r}" selected>${r}</option>
 									</c:if>
@@ -225,10 +232,10 @@
 							<th colspan="2" style="width: 300px">상품명</th>
 							<th>판매가</th>
 							<th>재고수량</th>
-							<th style="width: 70px;">레벨</th>
-							<th style="width: 100px;">레벨 수정</th>
+							<th style="width: 90px;">진열 순서</th>
+							<th style="width: 100px;">진열 순서 수정</th>
 							<th>판매상태</th>
-							<th>판매상태 수정</th>
+							<th style="width: 130px">판매상태 수정</th>
 							<th>카테고리</th>
 						</tr>
 							<c:forEach var="g" items="${goodsList}" varStatus="s">
@@ -275,9 +282,16 @@
 									<td><input class="form-control" name="goodsLevel" type="number" value="${g.goodsLevel}"></td>
 									<td>${g.goodsActive}</td>
 									<td>
-										<select>
-											<option value="판매중">판매중</option>
-											<option value="비활성화">비활성화</option>
+										<select class="form-control d-inline-block">
+	
+											<c:forEach items="${fn:split('판매중,비활성화',',')}" var="r">
+												<c:if test="${g.goodsActive eq r}">
+													<option value="${r}" selected>${r}</option>
+												</c:if>
+												<c:if test="${g.goodsActive ne r}">
+													<option value="${r}">${r}</option>
+												</c:if>
+											</c:forEach>
 										</select>
 									</td>
 									<td>${g.lvl}</td>
@@ -381,8 +395,8 @@
    			console.log($updateForm.serialize());
    		
 			$.ajax({
-    			type: 'post'
-    			, url: '/58shop_b/goods/updateGoodsType'
+    			type: 'patch'
+    			, url: '/58shop_b/goods/goodsType'
     			, data: $updateForm.serialize()
 				, success: function(model){
 					console.log(model);
@@ -404,6 +418,7 @@
 					$('input[name=typeNo]').val($(this).val());
 				}
 			});
+			
 			// 검색어
 			if($('#searchType').val() == 'goods_no' && $('#searchWord').val().length != 0){ // 상품번호 검색 시 다른조건 무시됨
 				$('input[name=searchType]').val('goods_no');
@@ -436,8 +451,8 @@
    			} 
    			console.log(checkedValue);
    			$.ajax({
-				type: 'post'
-				, url: '/58shop_b/goods/delete'
+				type: 'DELETE'
+				, url: '/58shop_b/goods'
 				, data: {goodsNo: checkedValue}
 				, async: false
 				, success: function(model){
@@ -454,14 +469,39 @@
    		});
    	</script>
    	
-   	<!-- 전체 선택/해제 -->
+   	<!-- 상품 전체 선택/해제 -->
    	<script>
 		$('#allcheck').click(function(){
 			if($('#allcheck').is(':checked')) { // .is(':checked') : 체크 여부 확인. checked -> true
-				$('input[type="checkbox"]').prop('checked', true);	
+				$('input[name=goodsNo]').prop('checked', true);	
 			} else {
-				$('input[type="checkbox"]').prop('checked', false);
+				$('input[name=goodsNo]').prop('checked', false);
 			}
+		});
+		$('input[name=goodsNo]').click(function(){
+			if($('input[name=goodsNo]').length == $('input[name=goodsNo]:checked').length) {
+				$('#allcheck').prop('checked', true);
+	   		} else {
+	   			$('#allcheck').prop('checked', false);
+	   		}
+		});
+   	</script>
+   	
+   	<!-- 상품 상태 전체 선택/해제 -->
+   	<script>
+	   	$('#stateAllCheck').click(function(){
+			if($('#stateAllCheck').is(':checked')) { // .is(':checked') : 체크 여부 확인. checked -> true
+				$('input[name=state]').prop('checked', true);	
+			} else {
+				$('input[name=state]').prop('checked', false);
+			}
+		});
+		$('input[name=state]').click(function(){
+			if($('input[name=state]').length == $('input[name=state]:checked').length) {
+				$('#stateAllCheck').prop('checked', true);
+	   		} else {
+	   			$('#stateAllCheck').prop('checked', false);
+	   		}
 		});
    	</script>
    	
@@ -521,6 +561,14 @@
 			todayDate = today.format('YYYY-MM-DD');
 			$('input[name=endDate]').attr('max', todayDate);
 			$('input[name=startDate]').attr('max', todayDate);
+			
+			
+				if($('input[name=state]').length == $('input[name=state]:checked').length) {
+					$('#stateAllCheck').prop('checked', true);
+		   		} else {
+		   			$('#stateAllCheck').prop('checked', false);
+		   		}
+			
 		});
 	</script>
 	
@@ -644,8 +692,8 @@
 		            $form.append($tmp);
 		            console.log($form.serialize());
 		            $.ajax({
-		                type: 'post'
-		                , url: '/58shop_b/goods/updateGoods'
+		                type: 'patch'
+		                , url: '/58shop_b/goods'
 		                , data: $form.serialize()
 		                , async: false
 		                , success: function(model){
@@ -686,6 +734,9 @@
 		});
 	</script>
 
+	
+	
+	
 	 <script src="${pageContext.request.contextPath }/resources/html/js/common_scripts.js"></script>
 	
 	<!-- Bootstrap core JavaScript-->
