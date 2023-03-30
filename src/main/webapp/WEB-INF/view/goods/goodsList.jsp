@@ -562,12 +562,12 @@
 			$('input[name=endDate]').attr('max', todayDate);
 			$('input[name=startDate]').attr('max', todayDate);
 			
-			
-				if($('input[name=state]').length == $('input[name=state]:checked').length) {
-					$('#stateAllCheck').prop('checked', true);
-		   		} else {
-		   			$('#stateAllCheck').prop('checked', false);
-		   		}
+		
+			if($('input[name=state]').length == $('input[name=state]:checked').length) {
+				$('#stateAllCheck').prop('checked', true);
+	   		} else {
+	   			$('#stateAllCheck').prop('checked', false);
+	   		}
 			
 		});
 	</script>

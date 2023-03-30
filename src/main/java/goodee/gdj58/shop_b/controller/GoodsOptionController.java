@@ -1,8 +1,8 @@
 package goodee.gdj58.shop_b.controller;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -36,7 +36,9 @@ public class GoodsOptionController {
 								, @RequestParam(value="endDate", defaultValue="") String endDate
 								, @RequestParam(value="currentPage", defaultValue="1") int currentPage
 								, @RequestParam(value="rowPerPage", defaultValue="100") int rowPerPage) {
-		
+		for(String s : stateList) {
+			log.debug(TeamColor.BLUE + s + "<- stateList, selectGoodsList");
+		}
 		log.debug(TeamColor.BLUE + searchType + "<- searchType, selectGoodsOptionList");
 		log.debug(TeamColor.BLUE + searchWord + "<- searchWord, selectGoodsOptionList");
 		log.debug(TeamColor.BLUE + currentPage + "<- currentPage, selectGoodsOptionList");
@@ -73,7 +75,7 @@ public class GoodsOptionController {
 		log.debug(TeamColor.BLUE + lastPage + "<- lastPage, selectGoodsOptionList");
 		
 		// 상품 목록
-		List<Map<String, Object>> goodsOptionList = Collections.emptyList(); // 검색된 상품이 없다면 빈 객체 반환
+		List<LinkedHashMap<String, Object>> goodsOptionList = Collections.emptyList(); // 검색된 상품이 없다면 빈 객체 반환
 		
 		if(goodsOptionCount != 0) { 
 			goodsOptionList = goodsOptionService.selectGoodsOptionList(companyId, searchType, searchWord, stateList, typeNo, dateType, startDate, endDate, currentPage, rowPerPage);

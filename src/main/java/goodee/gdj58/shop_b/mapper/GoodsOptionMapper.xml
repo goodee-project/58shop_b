@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.shop_b.mapper.GoodsOptionMapper">
+	
 	<update id="updateGoodsOptionQuantity" parameterType="goodee.gdj58.shop_b.vo.GoodsOption">
 		UPDATE shopping_goods_option 
 		SET goods_option_quantity = goods_option_quantity + #{goodsOptionQuantity}
@@ -50,10 +51,11 @@
 		</where>
 	</select>
 	
-	<select id="selectGoodsOptionList" resultType="java.util.Map" parameterType="java.util.Map">
+	<select id="selectGoodsOptionList" resultType="java.util.LinkedHashMap" parameterType="java.util.Map">
 		SELECT
 			t1.goods_no goodsNo
-			, goods_name goodsName
+			, t1.goods_name goodsName
+			, t1.type_content typeContent
 			, t1.goods_option_no goodsOptionNo
 			, t1.goods_option_content goodsOptionContent
 			, t1.goods_option_quantity goodsOptionQuantity
@@ -61,6 +63,7 @@
 					g.goods_no 
 					, g.goods_name 
 					, g.type_no
+					, st.type_content
 					, g.company_id 
 					, g.createdate
 					, g.updatedate 
@@ -108,7 +111,9 @@
 		</where>
 		
 		ORDER BY t1.createdate DESC		
-		LIMIT #{beginRow}, #{rowPerPage};
+		<if test="beginRow != null and rowPerPage != null">
+			LIMIT #{beginRow}, #{rowPerPage};
+		</if>
 	</select>
 	
 	<select id="selectGoodsQuantity" resultType="goodee.gdj58.shop_b.vo.GoodsOption" parameterType="Integer">	 

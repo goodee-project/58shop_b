@@ -99,10 +99,15 @@
 				    				<td>
 				    					<div class="row">
 				    						<div class="col-md-8">
-						    					<c:set var="sl" value="${fn:join(stateList, ',')}" />
-						    					
-						    					<c:forEach var="s" items="${goodsStateList}">
-						    						<input type="checkbox" class="" name="state" value="${s.state}" <c:if test="${fn:contains(sl, s.state)}">checked</c:if>> ${s.state}
+				    						
+				    							<c:set var="sl" value="${fn:join(stateList, ',')}" />
+						    					<c:forEach var="s" items="${fn:split('전체,판매중,일시품절,비활성화', ',')}">
+						    						<c:if test="${s eq '전체'}">
+						    							<input type="checkbox" id="stateAllCheck" value="">${s}
+						    						</c:if>
+						    						<c:if test="${s ne '전체'}">
+						    							<input type="checkbox" class="" name="state" value="${s}" <c:if test="${fn:contains(sl, s)}">checked</c:if>> ${s}
+						    						</c:if>
 						    					</c:forEach>
 					    					</div>
 				    					</div>
@@ -182,13 +187,11 @@
 							<h2><i class="fa fa-gift"></i>상품 재고 관리</h2>
 						</div>
 						<div class="row mb-3">
-							<div class="col-sm-12 col-md-3">
-								상품 검색결과 총 <strong style="color:#fc5b62">${goodsOptionCount}</strong>건
-							</div>
-							<div class="col-sm-12 col-md-3">
+							<div class="col-sm-12 col-md-6">
 			   					<button type="button" id="updateBtn" class="btn_1">수정재고 일괄 변경</button>
+			   					<a href="${pageContext.request.contextPath}/download" id="downloadBtn" class="btn_1">엑셀 파일 다운로드</a>
 		   					</div>
-		   					<div class="col-sm-12 col-md-3">
+		   					<div class="col-sm-12 col-md-6">
 		   						<div class="float-right">
 									<select id="rowPerPage" style="width: 75px" class="form-control form-control-sm d-inline-block">
 										<c:set var="rl" value="${{30, 50, 100}}" />
@@ -328,6 +331,24 @@
 		});
    	</script>
    	
+   	<!-- 상품 상태 전체 선택/해제 -->
+   	<script>
+	   	$('#stateAllCheck').click(function(){
+			if($('#stateAllCheck').is(':checked')) { // .is(':checked') : 체크 여부 확인. checked -> true
+				$('input[name=state]').prop('checked', true);	
+			} else {
+				$('input[name=state]').prop('checked', false);
+			}
+		});
+		$('input[name=state]').click(function(){
+			if($('input[name=state]').length == $('input[name=state]:checked').length) {
+				$('#stateAllCheck').prop('checked', true);
+	   		} else {
+	   			$('#stateAllCheck').prop('checked', false);
+	   		}
+		});
+   	</script>
+   	
    	<!-- rowperpage -->
    	<script>
    		$('#rowPerPage').change(function(){
@@ -384,6 +405,12 @@
 			todayDate = today.format('YYYY-MM-DD');
 			$('input[name=endDate]').attr('max', todayDate);
 			$('input[name=startDate]').attr('max', todayDate);
+
+			if($('input[name=state]').length == $('input[name=state]:checked').length) {
+				$('#stateAllCheck').prop('checked', true);
+	   		} else {
+	   			$('#stateAllCheck').prop('checked', false);
+	   		}
 		});
 	</script>
 	
